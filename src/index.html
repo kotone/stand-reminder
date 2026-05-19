@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StandReminder</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <button id="close-btn" class="close-btn">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M1 1L13 13M1 13L13 1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </button>
+            <h1>Stand Reminder</h1>
+            <p>Keep your health in check</p>
+        </div>
+        
+        <div class="card">
+            <div class="row">
+                <label for="interval">Remind every (minutes)</label>
+                <input type="number" id="interval" value="45" min="1" max="120">
+            </div>
+            <div class="divider"></div>
+            <div class="row">
+                <span>Enable Reminder</span>
+                <label class="switch">
+                    <input type="checkbox" id="toggle-switch">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+        
+        <div class="status-text" id="status-text">
+            Currently stopped
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

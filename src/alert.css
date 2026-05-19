@@ -1,0 +1,73 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    width: 100vw;
+    height: 100vh;
+    background-color: transparent;
+    overflow: hidden;
+    /* IMPORTANT: Ensure it's not clickable in CSS as well */
+    pointer-events: none;
+    user-select: none;
+}
+
+/* Subtle red breathing border around the screen */
+.warning-border {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    box-shadow: inset 0 0 100px rgba(255, 59, 48, 0);
+    animation: border-breathe 2s ease-in-out infinite;
+}
+
+@keyframes border-breathe {
+    0%, 100% {
+        box-shadow: inset 0 0 0px rgba(255, 59, 48, 0);
+    }
+    50% {
+        box-shadow: inset 0 0 120px rgba(255, 59, 48, 0.5);
+    }
+}
+
+/* Heartbeat/breathing circles in the center */
+.heartbeat-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 200px;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.circle {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    background-color: rgba(52, 199, 89, 0.6); /* iOS Green color */
+    border-radius: 50%;
+    animation: ripple 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.delay1 {
+    animation-delay: -0.6s;
+}
+
+.delay2 {
+    animation-delay: -1.2s;
+}
+
+@keyframes ripple {
+    0% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(8);
+        opacity: 0;
+    }
+}

@@ -1,0 +1,47 @@
+name: Build and Release
+
+on:
+  push:
+    branches: [ "main", "master" ]
+    tags:
+      - 'v*'
+  workflow_dispatch: # 允许在 GitHub Actions 页面手动触发构建
+
+jobs:
+  build:
+    permissions:
+      contents: write # 允许创建 Release
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Rust cache (加速编译)
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: './src-tauri -> target'
+
+      # 使用 Tauri 官方 Action，它会自动下载预编译的 Tauri CLI 并执行构建，速度极快
+      - name: Build Tauri app
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          # 只有在推送 tag (如 v1.0.0) 时，才会自动创建 Draft Release
+          tagName: ${{ github.ref_name }}
+          releaseName: 'StandReminder ${{ github.ref_name }}'
+          releaseBody: '自动构建的 StandReminder 桌面程序，下载底部的 .msi 文件进行安装即可。'
+          releaseDraft: true
+          prerelease: false
+
+      # 如果只是提交代码到 main 分支，虽然不创建 Release，但也会把构建产物保存为 Artifact 供下载
+      - name: Upload Build Artifacts
+        if: github.ref_type == 'branch'
+        uses: actions/upload-artifact@v4
+        with:
+          name: StandReminder-Windows-Installer
+          path: src-tauri/target/release/bundle/msi/*.msi
