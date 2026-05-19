@@ -87,23 +87,25 @@ jobs:
             Write-Host "icon.png is already RGBA."
           }
 
-      # 使用 Tauri 官方 Action，它会自动下载预编译的 Tauri CLI 并执行构建，速度极快
-      - name: Build Tauri app
-        uses: tauri-apps/tauri-action@v0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          # 只有在推送 tag (如 v1.0.0) 时，才会自动创建 Draft Release
-          tagName: ${{ github.ref_name }}
-          releaseName: 'StandReminder ${{ github.ref_name }}'
-          releaseBody: '自动构建的 StandReminder 桌面程序，下载底部的 .msi 文件进行安装即可。'
-          releaseDraft: true
-          prerelease: false
+      # 直接编译出免安装的独立 EXE
+      - name: Build standalone EXE
+        working-directory: src-tauri
+        run: cargo build --release --features custom-protocol
 
-      # 如果只是提交代码到 main 分支，虽然不创建 Release，但也会把构建产物保存为 Artifact 供下载
-      - name: Upload Build Artifacts
-        if: github.ref_type == 'branch'
+      # 上传免安装的 EXE 文件作为 Artifact
+      - name: Upload Portable EXE
         uses: actions/upload-artifact@v4
         with:
-          name: StandReminder-Windows-Installer
-          path: src-tauri/target/release/bundle/msi/*.msi
+          name: StandReminder-Portable
+          path: src-tauri/target/release/stand-reminder.exe
+
+      # 如果推送了 tag，自动创建 Release 并附上 EXE
+      - name: Create Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          draft: true
+          files: src-tauri/target/release/stand-reminder.exe
+          body: '站立提醒桌面程序（免安装版），直接双击 EXE 即可运行。'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

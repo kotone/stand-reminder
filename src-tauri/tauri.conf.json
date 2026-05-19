@@ -15,14 +15,14 @@
       "all": true
     },
     "bundle": {
-      "active": true,
+      "active": false,
       "category": "DeveloperTool",
       "copyright": "",
       "identifier": "com.standreminder.dev",
       "icon": [
         "icons/icon.ico"
       ],
-      "targets": "all",
+      "targets": [],
       "windows": {
         "certificateThumbprint": null,
         "digestAlgorithm": "sha256",
