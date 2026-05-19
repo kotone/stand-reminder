@@ -19,6 +19,7 @@ body, html {
     position: absolute;
     inset: 0;
     padding: 20px; /* Border thickness */
+    transition: padding 1s ease-in-out;
     background: repeating-linear-gradient(
         -45deg,
         #ff3b30 0,
@@ -40,5 +41,62 @@ body, html {
 @keyframes marquee {
     100% {
         background-position: 113px 0;
+    }
+}
+
+.marquee-border.expanded {
+    padding: min(200px, 20vw);
+}
+
+.center-alert {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: all 1s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+.center-alert.show {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+}
+
+.pulse-circle {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #ffcc00 0%, #ff3b30 100%);
+    animation: pulse 1.5s infinite;
+    box-shadow: 0 0 30px #ff3b30;
+}
+
+.pulse-text {
+    position: absolute;
+    font-size: 36px;
+    font-weight: 800;
+    color: white;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.6);
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(255, 59, 48, 0.7);
+    }
+    70% {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 50px rgba(255, 59, 48, 0);
+    }
+    100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(255, 59, 48, 0);
     }
 }

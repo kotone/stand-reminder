@@ -16,6 +16,15 @@ serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 tokio = { version = "1.28", features = ["full", "time"] }
 
+[target.'cfg(windows)'.dependencies]
+windows = { version = "0.52", features = [
+    "Win32_System_StationAndDesktop",
+    "Win32_System_SystemServices",
+    "Win32_Foundation",
+    "Win32_Graphics_Gdi",
+    "Win32_UI_WindowsAndMessaging"
+] }
+
 [features]
 # 这个 feature 是 Tauri CLI 强制要求的，用于在打包时开启 custom-protocol
 default = ["custom-protocol"]

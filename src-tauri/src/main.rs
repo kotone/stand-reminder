@@ -11,6 +11,76 @@ use std::sync::Mutex;
 use std::time::Duration;
 use tokio::sync::mpsc;
 
+#[cfg(windows)]
+use windows::Win32::System::StationAndDesktop::{OpenInputDesktop, CloseDesktop};
+#[cfg(windows)]
+use windows::Win32::Graphics::Gdi::{EnumDisplayMonitors, GetMonitorInfoW, MONITORINFO, HDC, HMONITOR};
+#[cfg(windows)]
+use windows::Win32::Foundation::{RECT, LPARAM, BOOL};
+
+#[cfg(windows)]
+fn is_locked() -> bool {
+    unsafe {
+        // MAXIMUM_ALLOWED is 0x02000000
+        let result = OpenInputDesktop(0, false, 0x02000000);
+        if let Ok(handle) = result {
+            let _ = CloseDesktop(handle);
+            false
+        } else {
+            true
+        }
+    }
+}
+
+#[cfg(not(windows))]
+fn is_locked() -> bool {
+    false
+}
+
+#[cfg(windows)]
+unsafe extern "system" fn monitor_enum_proc(
+    hmonitor: HMONITOR,
+    _hdc: HDC,
+    lprect: *mut RECT,
+    lparam: LPARAM,
+) -> BOOL {
+    let target_rect = &*(lparam.0 as *const RECT);
+    let mut mi = MONITORINFO {
+        cbSize: std::mem::size_of::<MONITORINFO>() as u32,
+        ..Default::default()
+    };
+    if GetMonitorInfoW(hmonitor, &mut mi).0 != 0 {
+        if mi.rcMonitor.left == target_rect.left && mi.rcMonitor.top == target_rect.top {
+            let result = &mut *((lparam.0 as *mut RECT).offset(1));
+            *result = mi.rcWork;
+            return BOOL(0);
+        }
+    }
+    BOOL(1)
+}
+
+#[cfg(windows)]
+fn get_work_area(x: i32, y: i32, width: u32, height: u32) -> Option<(i32, i32, u32, u32)> {
+    unsafe {
+        let mut rects = [
+            RECT { left: x, top: y, right: x + width as i32, bottom: y + height as i32 },
+            RECT::default(),
+        ];
+        EnumDisplayMonitors(None, None, Some(monitor_enum_proc), LPARAM(rects.as_mut_ptr() as isize));
+        let work = rects[1];
+        if work.right > work.left && work.bottom > work.top {
+            Some((work.left, work.top, (work.right - work.left) as u32, (work.bottom - work.top) as u32))
+        } else {
+            None
+        }
+    }
+}
+
+#[cfg(not(windows))]
+fn get_work_area(_x: i32, _y: i32, _width: u32, _height: u32) -> Option<(i32, i32, u32, u32)> {
+    None
+}
+
 struct AppState {
     sender: Mutex<Option<mpsc::Sender<()>>>,
     minutes: Mutex<u64>,
@@ -32,20 +102,28 @@ fn start_reminder(minutes: u64, app_handle: tauri::AppHandle, state: tauri::Stat
     *state.sender.lock().unwrap() = Some(tx);
 
     tauri::async_runtime::spawn(async move {
-        let duration = Duration::from_secs(minutes * 60);
+        let target = minutes * 60;
+        let mut elapsed = 0;
+        let mut alert_shown = false;
+        
         loop {
             tokio::select! {
-                _ = tokio::time::sleep(duration) => {
-                    // Time to show alert
-                    show_alerts(&app_handle);
-                    // Enable "next" when alert is shown
-                    let _ = app_handle.tray_handle().get_item("next").set_enabled(true);
+                _ = tokio::time::sleep(Duration::from_secs(1)) => {
+                    if is_locked() {
+                        elapsed = 0;
+                        continue;
+                    }
                     
-                    // Note: We removed the auto-close logic here.
-                    // The alert will stay until the user clicks "next" or "stop".
+                    if !alert_shown {
+                        elapsed += 1;
+                        if elapsed >= target {
+                            show_alerts(&app_handle);
+                            let _ = app_handle.tray_handle().get_item("next").set_enabled(true);
+                            alert_shown = true;
+                        }
+                    }
                 }
                 _ = rx.recv() => {
-                    // Timer stopped
                     break;
                 }
             }
@@ -102,14 +180,20 @@ fn show_alerts(app_handle: &tauri::AppHandle) {
                 let pos = monitor.position();
                 let size = monitor.size();
 
+                let (x, y, w, h) = if let Some(wa) = get_work_area(pos.x as i32, pos.y as i32, size.width, size.height) {
+                    wa
+                } else {
+                    (pos.x as i32, pos.y as i32, size.width, size.height)
+                };
+
                 if let Ok(window) = WindowBuilder::new(
                     app_handle,
                     label,
                     WindowUrl::App("alert.html".into()),
                 )
                 .title("Alert")
-                .position(pos.x as f64, pos.y as f64)
-                .inner_size(size.width as f64, size.height as f64)
+                .position(x as f64, y as f64)
+                .inner_size(w as f64, h as f64)
                 .decorations(false)
                 .transparent(true)
                 .always_on_top(true)
