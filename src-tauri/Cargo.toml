@@ -11,7 +11,12 @@ edition = "2021"
 tauri-build = { version = "1.5", features = [] }
 
 [dependencies]
-tauri = { version = "1.5", features = ["system-tray", "api-all", "custom-protocol"] }
+tauri = { version = "1.5", features = ["system-tray", "api-all"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 tokio = { version = "1.28", features = ["full", "time"] }
+
+[features]
+# 这个 feature 是 Tauri CLI 强制要求的，用于在打包时开启 custom-protocol
+default = ["custom-protocol"]
+custom-protocol = ["tauri/custom-protocol"]
