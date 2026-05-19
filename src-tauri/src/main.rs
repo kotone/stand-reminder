@@ -12,7 +12,7 @@ use std::time::Duration;
 use tokio::sync::mpsc;
 
 #[cfg(windows)]
-use windows::Win32::System::StationsAndDesktops::{OpenInputDesktop, CloseDesktop};
+use windows::Win32::System::StationsAndDesktops::{OpenInputDesktop, CloseDesktop, DESKTOP_CONTROL_FLAGS, DESKTOP_ACCESS_FLAGS};
 #[cfg(windows)]
 use windows::Win32::Graphics::Gdi::{EnumDisplayMonitors, GetMonitorInfoW, MONITORINFO, HDC, HMONITOR};
 #[cfg(windows)]
@@ -22,7 +22,7 @@ use windows::Win32::Foundation::{RECT, LPARAM, BOOL};
 fn is_locked() -> bool {
     unsafe {
         // MAXIMUM_ALLOWED is 0x02000000
-        let result = OpenInputDesktop(0, false, 0x02000000);
+        let result = OpenInputDesktop(DESKTOP_CONTROL_FLAGS(0), false, DESKTOP_ACCESS_FLAGS(0x02000000));
         if let Ok(handle) = result {
             let _ = CloseDesktop(handle);
             false
@@ -41,7 +41,7 @@ fn is_locked() -> bool {
 unsafe extern "system" fn monitor_enum_proc(
     hmonitor: HMONITOR,
     _hdc: HDC,
-    lprect: *mut RECT,
+    _lprect: *mut RECT,
     lparam: LPARAM,
 ) -> BOOL {
     let target_rect = &*(lparam.0 as *const RECT);
