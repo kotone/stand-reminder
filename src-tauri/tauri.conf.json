@@ -19,6 +19,9 @@
       "category": "DeveloperTool",
       "copyright": "",
       "identifier": "com.standreminder.dev",
+      "icon": [
+        "icons/icon.ico"
+      ],
       "targets": "all",
       "windows": {
         "certificateThumbprint": null,
