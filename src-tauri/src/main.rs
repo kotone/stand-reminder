@@ -106,6 +106,7 @@ fn show_alerts(app_handle: &tauri::AppHandle) {
                 // Make it click-through
                 let _ = window.set_ignore_cursor_events(true);
             }
+            }
         }
     }
 }
