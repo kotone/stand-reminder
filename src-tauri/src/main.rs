@@ -12,7 +12,7 @@ use std::time::Duration;
 use tokio::sync::mpsc;
 
 #[cfg(windows)]
-use windows::Win32::System::StationAndDesktop::{OpenInputDesktop, CloseDesktop};
+use windows::Win32::System::StationsAndDesktops::{OpenInputDesktop, CloseDesktop};
 #[cfg(windows)]
 use windows::Win32::Graphics::Gdi::{EnumDisplayMonitors, GetMonitorInfoW, MONITORINFO, HDC, HMONITOR};
 #[cfg(windows)]
