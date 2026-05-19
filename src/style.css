@@ -1,6 +1,6 @@
 :root {
-    --bg-color: rgba(242, 242, 247, 0.85);
-    --card-bg: rgba(255, 255, 255, 0.9);
+    --bg-color: #f2f2f7;
+    --card-bg: #ffffff;
     --text-primary: #1C1C1E;
     --text-secondary: #8E8E93;
     --accent: #34C759;
@@ -28,8 +28,6 @@ body {
     width: 300px;
     height: 430px;
     background-color: var(--bg-color);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
     border-radius: 20px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.5);
     padding: 24px 20px;

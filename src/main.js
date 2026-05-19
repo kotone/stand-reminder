@@ -9,7 +9,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Load saved settings
     const savedInterval = localStorage.getItem('interval') || 45;
-    const isRunning = localStorage.getItem('isRunning') === 'true';
+    const savedRunning = localStorage.getItem('isRunning');
+    // First launch: savedRunning is null, default to false
+    const isRunning = savedRunning === 'true';
     
     intervalInput.value = savedInterval;
     toggleSwitch.checked = isRunning;
@@ -50,10 +52,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateStatusText() {
         if (toggleSwitch.checked) {
-            statusText.textContent = `Reminding every ${intervalInput.value} minutes`;
+            statusText.textContent = `每 ${intervalInput.value} 分钟提醒一次`;
             statusText.style.color = '#34C759';
         } else {
-            statusText.textContent = 'Currently stopped';
+            statusText.textContent = '已停止';
             statusText.style.color = '#8E8E93';
         }
     }

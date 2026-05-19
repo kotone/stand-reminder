@@ -73,17 +73,19 @@ body, html {
     background: radial-gradient(circle, #ffcc00 0%, #ff3b30 100%);
     animation: pulse 1.5s infinite;
     box-shadow: 0 0 30px #ff3b30;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .pulse-text {
-    position: absolute;
-    font-size: 36px;
+    font-size: 32px;
     font-weight: 800;
     color: white;
     text-shadow: 2px 2px 8px rgba(0,0,0,0.6);
     font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
-    text-transform: uppercase;
     letter-spacing: 2px;
+    white-space: nowrap;
 }
 
 @keyframes pulse {
