@@ -82,11 +82,12 @@ fn show_alerts(app_handle: &tauri::AppHandle) {
     // Check if any alerts are already open and close them
     close_alerts(app_handle);
 
-    if let Ok(monitors) = app_handle.primary_window().unwrap().available_monitors() {
-        for (idx, monitor) in monitors.iter().enumerate() {
-            let label = format!("alert_{}", idx);
-            let pos = monitor.position();
-            let size = monitor.size();
+    if let Some(main_window) = app_handle.get_window("main") {
+        if let Ok(monitors) = main_window.available_monitors() {
+            for (idx, monitor) in monitors.iter().enumerate() {
+                let label = format!("alert_{}", idx);
+                let pos = monitor.position();
+                let size = monitor.size();
 
             if let Ok(window) = WindowBuilder::new(
                 app_handle,
