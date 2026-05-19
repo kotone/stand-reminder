@@ -13,12 +13,20 @@ use tokio::sync::mpsc;
 
 struct AppState {
     sender: Mutex<Option<mpsc::Sender<()>>>,
+    minutes: Mutex<u64>,
 }
 
 #[tauri::command]
 fn start_reminder(minutes: u64, app_handle: tauri::AppHandle, state: tauri::State<AppState>) {
-    // Stop existing timer
-    stop_reminder(state.clone());
+    // Stop existing timer and close any alerts
+    stop_reminder(app_handle.clone(), state.clone());
+
+    *state.minutes.lock().unwrap() = minutes;
+
+    let tray = app_handle.tray_handle();
+    let _ = tray.get_item("start").set_enabled(false);
+    let _ = tray.get_item("stop").set_enabled(true);
+    let _ = tray.get_item("next").set_enabled(false);
 
     let (tx, mut rx) = mpsc::channel(1);
     *state.sender.lock().unwrap() = Some(tx);
@@ -30,13 +38,11 @@ fn start_reminder(minutes: u64, app_handle: tauri::AppHandle, state: tauri::Stat
                 _ = tokio::time::sleep(duration) => {
                     // Time to show alert
                     show_alerts(&app_handle);
+                    // Enable "next" when alert is shown
+                    let _ = app_handle.tray_handle().get_item("next").set_enabled(true);
                     
-                    // Alerts auto close after 10 seconds
-                    let app_clone = app_handle.clone();
-                    tauri::async_runtime::spawn(async move {
-                        tokio::time::sleep(Duration::from_secs(10)).await;
-                        close_alerts(&app_clone);
-                    });
+                    // Note: We removed the auto-close logic here.
+                    // The alert will stay until the user clicks "next" or "stop".
                 }
                 _ = rx.recv() => {
                     // Timer stopped
@@ -48,11 +54,18 @@ fn start_reminder(minutes: u64, app_handle: tauri::AppHandle, state: tauri::Stat
 }
 
 #[tauri::command]
-fn stop_reminder(state: tauri::State<AppState>) {
+fn stop_reminder(app_handle: tauri::AppHandle, state: tauri::State<AppState>) {
     let mut sender_opt = state.sender.lock().unwrap();
     if let Some(sender) = sender_opt.take() {
         let _ = sender.try_send(());
     }
+    
+    let tray = app_handle.tray_handle();
+    let _ = tray.get_item("start").set_enabled(true);
+    let _ = tray.get_item("stop").set_enabled(false);
+    let _ = tray.get_item("next").set_enabled(false);
+    
+    close_alerts(&app_handle);
 }
 
 #[tauri::command]
@@ -89,23 +102,23 @@ fn show_alerts(app_handle: &tauri::AppHandle) {
                 let pos = monitor.position();
                 let size = monitor.size();
 
-            if let Ok(window) = WindowBuilder::new(
-                app_handle,
-                label,
-                WindowUrl::App("alert.html".into()),
-            )
-            .title("Alert")
-            .position(pos.x as f64, pos.y as f64)
-            .inner_size(size.width as f64, size.height as f64)
-            .decorations(false)
-            .transparent(true)
-            .always_on_top(true)
-            .skip_taskbar(true)
-            .build()
-            {
-                // Make it click-through
-                let _ = window.set_ignore_cursor_events(true);
-            }
+                if let Ok(window) = WindowBuilder::new(
+                    app_handle,
+                    label,
+                    WindowUrl::App("alert.html".into()),
+                )
+                .title("Alert")
+                .position(pos.x as f64, pos.y as f64)
+                .inner_size(size.width as f64, size.height as f64)
+                .decorations(false)
+                .transparent(true)
+                .always_on_top(true)
+                .skip_taskbar(true)
+                .build()
+                {
+                    // Make it click-through
+                    let _ = window.set_ignore_cursor_events(true);
+                }
             }
         }
     }
@@ -120,16 +133,18 @@ fn close_alerts(app_handle: &tauri::AppHandle) {
 }
 
 fn main() {
-    let quit = CustomMenuItem::new("quit".to_string(), "退出程序");
     let show = CustomMenuItem::new("show".to_string(), "打开设置");
     let start = CustomMenuItem::new("start".to_string(), "启动提醒");
-    let stop = CustomMenuItem::new("stop".to_string(), "停止提醒");
+    let stop = CustomMenuItem::new("stop".to_string(), "停止提醒").disabled();
+    let next = CustomMenuItem::new("next".to_string(), "下一次").disabled();
+    let quit = CustomMenuItem::new("quit".to_string(), "退出程序");
     
     let tray_menu = SystemTrayMenu::new()
         .add_item(show)
         .add_native_item(SystemTrayMenuItem::Separator)
         .add_item(start)
         .add_item(stop)
+        .add_item(next)
         .add_native_item(SystemTrayMenuItem::Separator)
         .add_item(quit);
         
@@ -138,6 +153,7 @@ fn main() {
     tauri::Builder::default()
         .manage(AppState {
             sender: Mutex::new(None),
+            minutes: Mutex::new(45), // Default value
         })
         .system_tray(tray)
         .on_system_tray_event(|app, event| match event {
@@ -150,12 +166,15 @@ fn main() {
                         show_settings(app.clone());
                     }
                     "start" => {
-                        // Default 45 mins if triggered from tray
-                        start_reminder(45, app.clone(), app.state::<AppState>());
+                        let minutes = *app.state::<AppState>().minutes.lock().unwrap();
+                        start_reminder(minutes, app.clone(), app.state::<AppState>());
                     }
                     "stop" => {
-                        stop_reminder(app.state::<AppState>());
-                        close_alerts(app);
+                        stop_reminder(app.clone(), app.state::<AppState>());
+                    }
+                    "next" => {
+                        let minutes = *app.state::<AppState>().minutes.lock().unwrap();
+                        start_reminder(minutes, app.clone(), app.state::<AppState>());
                     }
                     _ => {}
                 }

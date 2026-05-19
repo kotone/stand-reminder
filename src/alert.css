@@ -14,60 +14,31 @@ body, html {
     user-select: none;
 }
 
-/* Subtle red breathing border around the screen */
-.warning-border {
+/* Marquee border effect with transparent center */
+.marquee-border {
     position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    box-shadow: inset 0 0 100px rgba(255, 59, 48, 0);
-    animation: border-breathe 2s ease-in-out infinite;
+    inset: 0;
+    padding: 20px; /* Border thickness */
+    background: repeating-linear-gradient(
+        -45deg,
+        #ff3b30 0,
+        #ff3b30 40px,
+        #ffcc00 40px,
+        #ffcc00 80px
+    );
+    background-size: 113px 113px; /* Ensure seamless animation */
+    animation: marquee 1s linear infinite;
+    
+    /* Punch a hole in the center so it's fully click-through and transparent */
+    -webkit-mask: 
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
 }
 
-@keyframes border-breathe {
-    0%, 100% {
-        box-shadow: inset 0 0 0px rgba(255, 59, 48, 0);
-    }
-    50% {
-        box-shadow: inset 0 0 120px rgba(255, 59, 48, 0.5);
-    }
-}
-
-/* Heartbeat/breathing circles in the center */
-.heartbeat-container {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 200px;
-    height: 200px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.circle {
-    position: absolute;
-    width: 80px;
-    height: 80px;
-    background-color: rgba(52, 199, 89, 0.6); /* iOS Green color */
-    border-radius: 50%;
-    animation: ripple 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-}
-
-.delay1 {
-    animation-delay: -0.6s;
-}
-
-.delay2 {
-    animation-delay: -1.2s;
-}
-
-@keyframes ripple {
-    0% {
-        transform: scale(1);
-        opacity: 0.8;
-    }
+@keyframes marquee {
     100% {
-        transform: scale(8);
-        opacity: 0;
+        background-position: 113px 0;
     }
 }
