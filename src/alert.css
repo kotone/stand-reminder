@@ -4,61 +4,142 @@
     box-sizing: border-box;
 }
 
-body, html {
+body,
+html {
     width: 100vw;
     height: 100vh;
     background-color: transparent;
     overflow: hidden;
-    /* IMPORTANT: Ensure it's not clickable in CSS as well */
     pointer-events: none;
     user-select: none;
 }
 
-/* Marquee border effect with transparent center */
+/* ============================================
+   Heartbeat Pulse Border
+   - Coral-red gradient, no stripes
+   - Double-tap rhythm mimicking a real heartbeat
+   ============================================ */
 .marquee-border {
     position: absolute;
     inset: 0;
-    padding: 20px; /* Border thickness */
-    transition: padding 1s ease-in-out;
-    background: repeating-linear-gradient(
-        -45deg,
-        #ff3b30 0,
-        #ff3b30 40px,
-        #ffcc00 40px,
-        #ffcc00 80px
-    );
-    background-size: 113px 113px; /* Ensure seamless animation */
-    animation: marquee 1s linear infinite;
-    
-    /* Punch a hole in the center so it's fully click-through and transparent */
-    -webkit-mask: 
+    padding: 14px;
+    background: linear-gradient(135deg, #ff6b6b, #ee5a24, #f0932b, #ff6348);
+    background-size: 300% 300%;
+    animation:
+        heartbeat 1.6s ease-in-out infinite,
+        gradient-shift 6s ease infinite;
+
+    /* Transparent center - click-through */
+    -webkit-mask:
         linear-gradient(#fff 0 0) content-box,
         linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
+
+    /* Soft outer glow */
+    filter: drop-shadow(0 0 6px rgba(255, 107, 107, 0.4));
+    transition: filter 1s ease;
 }
 
-@keyframes marquee {
+/* Heartbeat: double-tap like a real heartbeat (lub-dub) */
+@keyframes heartbeat {
+    0% {
+        padding: 14px;
+    }
+
+    7% {
+        padding: 26px;
+    }
+
+    /* Systole - quick strong expand */
+    14% {
+        padding: 16px;
+    }
+
+    /* Brief relax */
+    21% {
+        padding: 22px;
+    }
+
+    /* Diastole - second smaller beat */
+    35% {
+        padding: 14px;
+    }
+
+    /* Return to rest */
     100% {
-        background-position: 113px 0;
+        padding: 14px;
+    }
+
+    /* Pause until next cycle */
+}
+
+/* Gradient color shifting */
+@keyframes gradient-shift {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
     }
 }
 
-.marquee-border.expanded {
-    padding: min(200px, 20vw);
+/* ============================================
+   10s Intensified State
+   - Faster rhythm, larger amplitude
+   - Stronger glow
+   ============================================ */
+.marquee-border.intensified {
+    animation:
+        heartbeat-intense 1.0s ease-in-out infinite,
+        gradient-shift 3s ease infinite;
+    filter: drop-shadow(0 0 20px rgba(255, 107, 107, 0.6));
 }
 
+@keyframes heartbeat-intense {
+    0% {
+        padding: 30px;
+    }
+
+    7% {
+        padding: min(120px, 10vw);
+    }
+
+    14% {
+        padding: 40px;
+    }
+
+    21% {
+        padding: min(90px, 8vw);
+    }
+
+    35% {
+        padding: 30px;
+    }
+
+    100% {
+        padding: 30px;
+    }
+}
+
+/* ============================================
+   Center Alert - breathing circle with text
+   ============================================ */
 .center-alert {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) scale(0);
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
     opacity: 0;
-    transition: all 1s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    transition: all 1s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .center-alert.show {
@@ -66,39 +147,60 @@ body, html {
     opacity: 1;
 }
 
+/* Pulsing circle synced with heartbeat rhythm */
 .pulse-circle {
-    width: 200px;
-    height: 200px;
+    width: 180px;
+    height: 180px;
     border-radius: 50%;
-    background: radial-gradient(circle, #ffcc00 0%, #ff3b30 100%);
-    animation: pulse 1.5s infinite;
-    box-shadow: 0 0 30px #ff3b30;
+    background: radial-gradient(circle at 35% 35%, #ff9a76, #ff6b6b, #ee5a24);
+    animation: center-breathe 1.0s ease-in-out infinite;
+    box-shadow:
+        0 0 30px rgba(238, 90, 36, 0.5),
+        0 0 60px rgba(255, 107, 107, 0.3);
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .pulse-text {
-    font-size: 32px;
+    font-size: 26px;
     font-weight: 800;
     color: white;
-    text-shadow: 2px 2px 8px rgba(0,0,0,0.6);
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
     font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
-    letter-spacing: 2px;
+    letter-spacing: 3px;
     white-space: nowrap;
 }
 
-@keyframes pulse {
+/* Center circle breathes in heartbeat rhythm */
+@keyframes center-breathe {
     0% {
-        transform: scale(0.95);
-        box-shadow: 0 0 0 0 rgba(255, 59, 48, 0.7);
+        transform: scale(0.92);
+        box-shadow: 0 0 20px rgba(238, 90, 36, 0.4), 0 0 40px rgba(255, 107, 107, 0.2);
     }
-    70% {
-        transform: scale(1.05);
-        box-shadow: 0 0 0 50px rgba(255, 59, 48, 0);
+
+    7% {
+        transform: scale(1.08);
+        box-shadow: 0 0 40px rgba(238, 90, 36, 0.7), 0 0 80px rgba(255, 107, 107, 0.4);
     }
+
+    14% {
+        transform: scale(0.96);
+        box-shadow: 0 0 25px rgba(238, 90, 36, 0.5), 0 0 50px rgba(255, 107, 107, 0.25);
+    }
+
+    21% {
+        transform: scale(1.04);
+        box-shadow: 0 0 35px rgba(238, 90, 36, 0.6), 0 0 70px rgba(255, 107, 107, 0.35);
+    }
+
+    35% {
+        transform: scale(0.92);
+        box-shadow: 0 0 20px rgba(238, 90, 36, 0.4), 0 0 40px rgba(255, 107, 107, 0.2);
+    }
+
     100% {
-        transform: scale(0.95);
-        box-shadow: 0 0 0 0 rgba(255, 59, 48, 0);
+        transform: scale(0.92);
+        box-shadow: 0 0 20px rgba(238, 90, 36, 0.4), 0 0 40px rgba(255, 107, 107, 0.2);
     }
 }
