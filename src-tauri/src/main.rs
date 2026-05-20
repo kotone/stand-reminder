@@ -295,6 +295,9 @@ fn main() {
                     _ => {}
                 }
             }
+            SystemTrayEvent::LeftClick { .. } => {
+                show_settings(app.clone());
+            }
             _ => {}
         })
         .invoke_handler(tauri::generate_handler![
