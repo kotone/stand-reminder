@@ -156,9 +156,4 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
         centerElem.classList.add('show');
     }, 1000);
-
-    setTimeout(() => {
-        document.body.classList.add('intensified');
-        borderElem.classList.add('intensified');
-    }, 10000);
 });
