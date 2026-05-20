@@ -173,8 +173,8 @@ fn stop_reminder(app_handle: tauri::AppHandle, state: tauri::State<AppState>) {
 #[tauri::command]
 fn show_settings(app_handle: tauri::AppHandle) {
     if let Some(window) = app_handle.get_window("main") {
-        window.show().unwrap();
-        window.set_focus().unwrap();
+        let _ = window.show();
+        let _ = window.set_focus();
     } else {
         let _ = WindowBuilder::new(
             &app_handle,
@@ -312,5 +312,22 @@ fn main() {
             Ok(())
         })
         .run(tauri::generate_context!())
-        .expect("error while running tauri application");
+        .unwrap_or_else(|e| {
+            #[cfg(windows)]
+            {
+                use windows::Win32::UI::WindowsAndMessaging::{
+                    MessageBoxW, MB_OK, MB_ICONERROR,
+                };
+                use windows::core::HSTRING;
+                let msg = HSTRING::from(format!("程序启动失败：{}\n\n请确认已安装 WebView2 Runtime。", e));
+                let title = HSTRING::from("StandReminder 错误");
+                unsafe {
+                    MessageBoxW(None, &msg, &title, MB_OK | MB_ICONERROR);
+                }
+            }
+            #[cfg(not(windows))]
+            {
+                eprintln!("error while running tauri application: {}", e);
+            }
+        });
 }
