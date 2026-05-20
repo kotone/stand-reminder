@@ -222,6 +222,7 @@ fn show_alerts(app_handle: &tauri::AppHandle) {
                 .transparent(true)
                 .always_on_top(true)
                 .skip_taskbar(true)
+                .visible(false)
                 .build()
                 {
                     // Make it click-through

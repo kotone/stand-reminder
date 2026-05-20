@@ -33,6 +33,7 @@ body {
     height: 455px;
     background-color: #141419; /* Opaque background to prevent text leak-through */
     border-radius: 24px;
+    overflow: hidden; /* Prevent ambient glow blobs from bleeding into transparent window bounds */
     border: 1px solid rgba(255, 255, 255, 0.14);
     box-shadow: 
         inset 0 1px 0 rgba(255, 255, 255, 0.2),

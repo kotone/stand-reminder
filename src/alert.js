@@ -156,4 +156,11 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
         centerElem.classList.add('show');
     }, 1000);
+
+    // Show window only when fully styled and ready to avoid flash/snapping
+    setTimeout(() => {
+        if (window.__TAURI__) {
+            window.__TAURI__.window.appWindow.show();
+        }
+    }, 150);
 });
