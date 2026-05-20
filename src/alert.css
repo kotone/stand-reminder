@@ -77,7 +77,7 @@ body, html {
 /* Intensified State (after 10s) */
 body.theme-aura .marquee-border.intensified,
 body:not([class*="theme-"]) .marquee-border.intensified {
-    background: rgba(0, 0, 0, 0.1);
+    background: rgba(0, 0, 0, 0.05); /* 保持清透，不加深 */
 }
 
 body.theme-aura .marquee-border.intensified .aura-glow,
@@ -89,34 +89,74 @@ body:not([class*="theme-"]) .marquee-border.intensified .aura-glow {
 body.theme-aura .marquee-border.intensified .aura-glow-1,
 body:not([class*="theme-"]) .marquee-border.intensified .aura-glow-1 {
     background: radial-gradient(circle, rgba(244, 63, 94, 0.7) 0%, rgba(244, 63, 94, 0) 70%);
+    animation: aura-move-1 16s ease-in-out infinite alternate, aura-hue-cycle 15s linear infinite;
 }
 
 body.theme-aura .marquee-border.intensified .aura-glow-2,
 body:not([class*="theme-"]) .marquee-border.intensified .aura-glow-2 {
     background: radial-gradient(circle, rgba(217, 70, 239, 0.65) 0%, rgba(217, 70, 239, 0) 70%);
+    animation: aura-move-2 20s ease-in-out infinite alternate, aura-hue-cycle 15s linear infinite;
 }
 
 body.theme-aura .marquee-border.intensified .aura-glow-3,
 body:not([class*="theme-"]) .marquee-border.intensified .aura-glow-3 {
     background: radial-gradient(circle, rgba(245, 158, 11, 0.5) 0%, rgba(245, 158, 11, 0) 70%);
+    animation: aura-move-3 14s ease-in-out infinite alternate, aura-hue-cycle 15s linear infinite;
 }
 
 @keyframes aura-move-1 {
-    0% { transform: translate(0, 0) scale(1); }
-    50% { transform: translate(15vw, 10vh) scale(1.1); }
-    100% { transform: translate(-10vw, 20vh) scale(0.95); }
+    0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+    50% { transform: translate(15vw, 8vh) scale(1.15) rotate(120deg); }
+    100% { transform: translate(-8vw, 16vh) scale(0.95) rotate(240deg); }
 }
 
 @keyframes aura-move-2 {
-    0% { transform: translate(0, 0) scale(1); }
-    50% { transform: translate(-20vw, -15vh) scale(0.9); }
-    100% { transform: translate(10vw, -5vh) scale(1.15); }
+    0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+    50% { transform: translate(-18vw, -12vh) scale(0.9) rotate(-180deg); }
+    100% { transform: translate(8vw, -4vh) scale(1.2) rotate(-360deg); }
 }
 
 @keyframes aura-move-3 {
-    0% { transform: translate(0, 0) scale(1); }
-    50% { transform: translate(-10vw, 15vh) scale(1.2); }
-    100% { transform: translate(15vw, -10vh) scale(0.85); }
+    0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+    50% { transform: translate(-8vw, 12vh) scale(1.25) rotate(90deg); }
+    100% { transform: translate(12vw, -8vh) scale(0.85) rotate(270deg); }
+}
+
+@keyframes aura-hue-cycle {
+    0% { filter: hue-rotate(0deg) blur(100px); }
+    100% { filter: hue-rotate(360deg) blur(100px); }
+}
+
+/* Aurora Waves Ribbon */
+.aura-waves {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    filter: blur(50px);
+    opacity: 0;
+    mix-blend-mode: screen;
+    transition: opacity 2s ease-in-out;
+}
+body.theme-aura .aura-waves,
+body:not([class*="theme-"]) .aura-waves {
+    opacity: 0.45;
+}
+.aurora-wave-1 {
+    animation: aurora-flow-1 22s ease-in-out infinite alternate;
+    transform-origin: center;
+}
+.aurora-wave-2 {
+    animation: aurora-flow-2 26s ease-in-out infinite alternate;
+    transform-origin: center;
+}
+@keyframes aurora-flow-1 {
+    0% { transform: scale(1) translate(-3%, -8%) rotate(-2deg); }
+    100% { transform: scale(1.12) translate(3%, 4%) rotate(2deg); }
+}
+@keyframes aurora-flow-2 {
+    0% { transform: scale(1.08) translate(3%, 8%) rotate(1deg); }
+    100% { transform: scale(0.92) translate(-3%, -4%) rotate(-1deg); }
 }
 
 /* ============================================
@@ -139,6 +179,18 @@ body:not([class*="theme-"]) .marquee-border.intensified .aura-glow-3 {
     animation: float-upwards 8s linear infinite;
 }
 
+/* Wavy floating particles for Aura theme */
+.particle-aura {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: float-wavy 12s linear infinite;
+}
+body.theme-aura.intensified .particle-aura,
+body:not([class*="theme-"]).intensified .particle-aura {
+    animation-duration: 7s;
+}
+
 @keyframes float-upwards {
     0% {
         transform: translateY(110vh) translateX(0) scale(1);
@@ -152,6 +204,21 @@ body:not([class*="theme-"]) .marquee-border.intensified .aura-glow-3 {
     }
     100% {
         transform: translateY(-10vh) translateX(50px) scale(0.5);
+        opacity: 0;
+    }
+}
+
+@keyframes float-wavy {
+    0% {
+        transform: translateY(110vh) translateX(0) scale(1);
+        opacity: 0;
+    }
+    10% { opacity: 0.6; }
+    30% { transform: translateY(80vh) translateX(20px) scale(0.95); }
+    60% { transform: translateY(45vh) translateX(-20px) scale(1.1); }
+    90% { opacity: 0.6; }
+    100% {
+        transform: translateY(-10vh) translateX(15px) scale(0.7);
         opacity: 0;
     }
 }
@@ -404,10 +471,10 @@ body.theme-zen .aura-glow-3 {
 
 /* 星空冥想 intensified state */
 body.theme-zen .marquee-border.intensified {
-    background: rgba(4, 4, 15, 0.25);
+    background: rgba(4, 4, 15, 0.15); /* 保持清透，不加深 */
     box-shadow: 
-        inset 0 0 120px rgba(139, 92, 246, 0.25),
-        inset 0 0 50px rgba(0, 0, 0, 0.6);
+        inset 0 0 120px rgba(10, 10, 30, 0.45),
+        inset 0 0 40px rgba(0, 0, 0, 0.55);
 }
 
 body.theme-zen .marquee-border.intensified .aura-glow {
@@ -460,6 +527,92 @@ body.theme-zen .glass-card {
         0 30px 70px rgba(0, 0, 0, 0.6),
         0 0 35px rgba(59, 130, 246, 0.15);
     animation: zen-card-breathe 8s ease-in-out infinite;
+}
+
+/* Zen Celestial orbits & planets */
+.zen-celestial-container {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 2s ease-in-out;
+}
+body.theme-zen .zen-celestial-container {
+    opacity: 1;
+}
+.celestial-orbit {
+    position: absolute;
+    border: 1px dashed rgba(255, 255, 255, 0.07);
+    border-radius: 50%;
+    transform-origin: center center;
+    pointer-events: none;
+}
+.orbit-1 {
+    width: 380px;
+    height: 380px;
+    top: -190px;
+    left: -190px;
+    animation: celestial-rotate 45s linear infinite;
+}
+.orbit-2 {
+    width: 640px;
+    height: 640px;
+    top: -320px;
+    left: -320px;
+    animation: celestial-rotate 75s linear infinite reverse;
+}
+.orbiting-planet {
+    position: absolute;
+    border-radius: 50%;
+}
+.planet-sub-1 {
+    width: 8px;
+    height: 8px;
+    top: 50%;
+    left: -4px;
+    background: #c084fc;
+    box-shadow: 0 0 10px rgba(192, 132, 252, 0.8);
+}
+.planet-sub-2 {
+    width: 14px;
+    height: 14px;
+    top: 15%;
+    right: 80px;
+    background: radial-gradient(circle at 30% 30%, #38bdf8 0%, #1d4ed8 100%);
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.6);
+}
+.main-planet {
+    position: absolute;
+    top: 10%;
+    right: 10%;
+    width: 66px;
+    height: 66px;
+    background: radial-gradient(circle at 30% 30%, #a855f7 0%, #4f46e5 60%, #1e1b4b 100%);
+    border-radius: 50%;
+    box-shadow: 0 0 25px rgba(168, 85, 247, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: rotate(15deg);
+    animation: planet-sway 18s ease-in-out infinite alternate;
+}
+.planet-ring {
+    position: absolute;
+    width: 106px;
+    height: 22px;
+    border: 3.5px solid rgba(236, 72, 153, 0.4);
+    border-radius: 50%;
+    transform: rotate(-25deg);
+    box-shadow: 0 0 12px rgba(236, 72, 153, 0.25);
+}
+@keyframes celestial-rotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+@keyframes planet-sway {
+    0% { transform: rotate(15deg) scale(0.98); }
+    100% { transform: rotate(35deg) scale(1.02); }
 }
 
 /* 繁星闪烁粒子 */
@@ -551,14 +704,14 @@ body.theme-cyber .aura-glow-3 {
 
 /* 赛博霓虹 intensified state */
 body.theme-cyber .marquee-border.intensified {
-    background: rgba(10, 6, 18, 0.2);
+    background: rgba(10, 6, 18, 0.12); /* 保持清透，不加深 */
     /* Make the grid lines glow and pulse slightly */
     background-image: 
         linear-gradient(rgba(6, 182, 212, 0.12) 1px, transparent 1px),
         linear-gradient(90deg, rgba(6, 182, 212, 0.12) 1px, transparent 1px);
     box-shadow: 
-        inset 0 0 120px rgba(236, 72, 153, 0.3),
-        inset 0 0 50px rgba(6, 182, 212, 0.2);
+        inset 0 0 120px rgba(236, 72, 153, 0.15),
+        inset 0 0 45px rgba(0, 0, 0, 0.5);
     animation: cyber-grid-shimmer 2s ease-in-out infinite alternate;
 }
 
@@ -729,10 +882,10 @@ body.theme-forest .aura-glow-3 {
 
 /* 森林朝露 intensified state */
 body.theme-forest .marquee-border.intensified {
-    background: rgba(8, 16, 12, 0.2);
+    background: rgba(8, 16, 12, 0.12); /* 保持清透，不加深 */
     box-shadow: 
-        inset 0 0 120px rgba(16, 185, 129, 0.28),
-        inset 0 0 50px rgba(245, 158, 11, 0.15);
+        inset 0 0 120px rgba(16, 185, 129, 0.15),
+        inset 0 0 45px rgba(0, 0, 0, 0.45);
 }
 
 body.theme-forest .marquee-border.intensified .aura-glow {
@@ -806,6 +959,82 @@ body.theme-forest .glass-card {
     box-shadow: 
         0 30px 70px rgba(0, 0, 0, 0.6),
         0 0 35px rgba(16, 185, 129, 0.12);
+}
+
+/* Forest sprouting seedlings & trees */
+.forest-growth-layer {
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 100%;
+    height: 140px;
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-end;
+    pointer-events: none;
+    z-index: 2;
+    opacity: 0;
+    transition: opacity 1.5s ease-out;
+}
+body.theme-forest .forest-growth-layer {
+    opacity: 0.85;
+}
+.bg-tree {
+    width: 90px;
+    height: 110px;
+    transform-origin: bottom center;
+    transform: scaleY(0) scaleX(0.5);
+    opacity: 0;
+    transition: transform 12s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 8s ease-out;
+}
+body.theme-forest .marquee-border.active ~ .forest-growth-layer .bg-tree {
+    transform: scaleY(1) scaleX(1);
+    opacity: 0.65;
+}
+body.theme-forest .marquee-border.active ~ .forest-growth-layer .tree-1 { transition-delay: 0.2s; }
+body.theme-forest .marquee-border.active ~ .forest-growth-layer .tree-2 { transition-delay: 1.5s; transition-duration: 15s; }
+body.theme-forest .marquee-border.active ~ .forest-growth-layer .tree-3 { transition-delay: 0.8s; transition-duration: 13s; }
+body.theme-forest .marquee-border.active ~ .forest-growth-layer .tree-4 { transition-delay: 2.2s; transition-duration: 11s; }
+
+.tree-trunk, .tree-branch {
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    transition: stroke-dashoffset 8s ease-out;
+}
+body.theme-forest .marquee-border.active ~ .forest-growth-layer .tree-trunk,
+body.theme-forest .marquee-border.active ~ .forest-growth-layer .tree-branch {
+    stroke-dashoffset: 0;
+}
+body.theme-forest .marquee-border.active ~ .forest-growth-layer .tree-1 .tree-trunk { transition-delay: 0.2s; }
+body.theme-forest .marquee-border.active ~ .forest-growth-layer .tree-2 .tree-trunk { transition-delay: 1.5s; }
+body.theme-forest .marquee-border.active ~ .forest-growth-layer .tree-3 .tree-trunk { transition-delay: 0.8s; }
+body.theme-forest .marquee-border.active ~ .forest-growth-layer .tree-4 .tree-trunk { transition-delay: 2.2s; }
+
+.tree-foliage {
+    transform: scale(0);
+    transform-origin: center;
+    transition: transform 6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+body.theme-forest .marquee-border.active ~ .forest-growth-layer .tree-foliage {
+    transform: scale(1);
+}
+body.theme-forest .marquee-border.active ~ .forest-growth-layer .tree-1 .tree-foliage { transition-delay: 3s; }
+body.theme-forest .marquee-border.active ~ .forest-growth-layer .tree-2 .tree-foliage { transition-delay: 5s; }
+body.theme-forest .marquee-border.active ~ .forest-growth-layer .tree-3 .tree-foliage { transition-delay: 4s; }
+body.theme-forest .marquee-border.active ~ .forest-growth-layer .tree-4 .tree-foliage { transition-delay: 4.5s; }
+
+/* In intensified state, trees sway gently in the breeze */
+body.theme-forest.intensified .bg-tree {
+    animation: tree-sway 6s ease-in-out infinite alternate;
+}
+body.theme-forest.intensified .tree-1 { animation-delay: 0s; }
+body.theme-forest.intensified .tree-2 { animation-delay: 1.5s; }
+body.theme-forest.intensified .tree-3 { animation-delay: 0.7s; }
+body.theme-forest.intensified .tree-4 { animation-delay: 2.2s; }
+
+@keyframes tree-sway {
+    0% { transform: rotate(-1.5deg) scale(1); }
+    100% { transform: rotate(2.5deg) scale(1.03); }
 }
 
 /* 树叶旋转下落粒子 */
@@ -1062,5 +1291,210 @@ body.theme-cyber .marquee-border {
         transform: translateY(-10vh) scale(1.1);
         opacity: 0;
     }
+}
+
+/* ============================================
+   强化状态下的卡片与内容表现 (Intensified Content)
+   ============================================ */
+
+/* --- 1. 流光极光主题加强 --- */
+body.theme-aura.intensified .glass-card,
+body:not([class*="theme-"]).intensified .glass-card {
+    border-color: rgba(236, 72, 153, 0.35);
+    box-shadow: 
+        0 30px 70px rgba(0, 0, 0, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2),
+        0 0 35px rgba(236, 72, 153, 0.25),
+        0 0 60px rgba(139, 92, 246, 0.15);
+    transform: translateY(-8px);
+}
+
+body.theme-aura.intensified .badge,
+body:not([class*="theme-"]).intensified .badge {
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.65), rgba(139, 92, 246, 0.65));
+    box-shadow: 0 0 15px rgba(236, 72, 153, 0.4);
+    transform: scale(1.05);
+}
+
+body.theme-aura.intensified .neck-head {
+    animation-duration: 2s;
+}
+body.theme-aura.intensified .shoulder-spin-left {
+    animation-duration: 1.8s;
+}
+body.theme-aura.intensified .shoulder-spin-right {
+    animation-duration: 1.8s;
+}
+body.theme-aura.intensified .stretch-arms,
+body.theme-aura.intensified .stretch-head {
+    animation-duration: 1.5s;
+}
+
+/* --- 2. 星空冥想主题加强 --- */
+body.theme-zen.intensified .glass-card {
+    border-color: rgba(168, 85, 247, 0.4);
+    box-shadow: 
+        0 30px 80px rgba(0, 0, 0, 0.65),
+        0 0 45px rgba(168, 85, 247, 0.35),
+        0 0 70px rgba(59, 130, 246, 0.2);
+}
+
+body.theme-zen.intensified .badge {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.6), rgba(59, 130, 246, 0.6));
+    box-shadow: 0 0 15px rgba(139, 92, 246, 0.4);
+    transform: scale(1.05);
+}
+
+body.theme-zen.intensified .zen-breathe-core {
+    animation: zen-breathe-fast 5s ease-in-out infinite;
+}
+body.theme-zen.intensified .zen-ripple-1 {
+    animation: zen-ripple-fast 5s ease-in-out infinite;
+}
+body.theme-zen.intensified .zen-ripple-2 {
+    animation: zen-ripple-fast 5s ease-in-out infinite;
+    animation-delay: 2.5s;
+}
+
+@keyframes zen-breathe-fast {
+    0%, 100% {
+        transform: scale(0.85);
+        opacity: 0.6;
+    }
+    50% {
+        transform: scale(1.45);
+        opacity: 1;
+    }
+}
+@keyframes zen-ripple-fast {
+    0% {
+        transform: scale(0.85);
+        opacity: 0.9;
+    }
+    100% {
+        transform: scale(2.8);
+        opacity: 0;
+    }
+}
+
+/* --- 3. 赛博霓虹主题加强 --- */
+body.theme-cyber.intensified .glass-card {
+    border-color: #06B6D4;
+    box-shadow: 
+        0 30px 70px rgba(0, 0, 0, 0.7),
+        0 0 25px rgba(6, 182, 212, 0.45),
+        0 0 50px rgba(236, 72, 153, 0.35);
+    background: rgba(10, 6, 18, 0.7);
+    animation: cyber-card-glitch 4s ease-in-out infinite alternate;
+}
+
+body.theme-cyber.intensified .badge {
+    background: linear-gradient(135deg, #06B6D4, #EC4899);
+    box-shadow: 0 0 15px #06B6D4;
+    text-shadow: 0 0 8px #ffffff;
+    transform: scale(1.05);
+}
+
+body.theme-cyber.intensified .guide-subtitle {
+    color: #06B6D4;
+    text-shadow: 0 0 10px rgba(6, 182, 212, 0.8), 0 0 20px rgba(6, 182, 212, 0.4);
+}
+
+body.theme-cyber.intensified .cyber-arms {
+    animation: cyber-arms-wave-fast 1.5s ease-in-out infinite;
+}
+body.theme-cyber.intensified .cyber-head {
+    animation: cyber-head-bob-fast 1.5s ease-in-out infinite;
+}
+body.theme-cyber.intensified .cyber-joint-l {
+    animation: cyber-joint-l-wave-fast 1.5s ease-in-out infinite;
+}
+body.theme-cyber.intensified .cyber-joint-r {
+    animation: cyber-joint-r-wave-fast 1.5s ease-in-out infinite;
+}
+
+@keyframes cyber-card-glitch {
+    0%, 95%, 100% {
+        border-color: rgba(6, 182, 212, 0.4);
+        box-shadow: 0 30px 70px rgba(0, 0, 0, 0.7), 0 0 25px rgba(6, 182, 212, 0.4), 0 0 50px rgba(236, 72, 153, 0.3);
+    }
+    96% {
+        border-color: #EC4899;
+        box-shadow: 0 30px 70px rgba(0, 0, 0, 0.7), 0 0 35px rgba(236, 72, 153, 0.6), 0 0 50px rgba(6, 182, 212, 0.4);
+    }
+    98% {
+        border-color: #06B6D4;
+        box-shadow: 0 30px 70px rgba(0, 0, 0, 0.7), 0 0 35px rgba(6, 182, 212, 0.6), 0 0 55px rgba(236, 72, 153, 0.5);
+    }
+}
+
+@keyframes cyber-arms-wave-fast {
+    0%, 100% { transform: scaleY(1); }
+    50% { transform: scaleY(1.25) translateY(-3px); }
+}
+@keyframes cyber-head-bob-fast {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+}
+@keyframes cyber-joint-l-wave-fast {
+    0%, 100% { transform: translateY(0) translateX(0); }
+    50% { transform: translateY(-11px) translateX(-4px); }
+}
+@keyframes cyber-joint-r-wave-fast {
+    0%, 100% { transform: translateY(0) translateX(0); }
+    50% { transform: translateY(-11px) translateX(4px); }
+}
+
+/* --- 4. 森林朝露主题加强 --- */
+body.theme-forest.intensified .glass-card {
+    border-color: rgba(52, 211, 153, 0.35);
+    box-shadow: 
+        0 30px 70px rgba(0, 0, 0, 0.6),
+        0 0 35px rgba(52, 211, 153, 0.3),
+        0 0 60px rgba(245, 158, 11, 0.15);
+    animation: forest-card-sway 8s ease-in-out infinite;
+}
+
+body.theme-forest.intensified .badge {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.6), rgba(245, 158, 11, 0.5));
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+    transform: scale(1.05);
+}
+
+body.theme-forest.intensified .guide-subtitle {
+    color: #34d399;
+    text-shadow: 0 0 8px rgba(52, 211, 153, 0.6);
+}
+
+body.theme-forest.intensified .sprout-stem {
+    animation: sprout-sway-fast 3s ease-in-out infinite alternate;
+}
+body.theme-forest.intensified .sprout-leaf-l {
+    animation: sprout-leaf-l-wave-fast 3s ease-in-out infinite alternate;
+}
+body.theme-forest.intensified .sprout-leaf-r {
+    animation: sprout-leaf-r-wave-fast 3s ease-in-out infinite alternate;
+}
+
+@keyframes forest-card-sway {
+    0%, 100% {
+        transform: translateY(0) rotate(0deg);
+    }
+    50% {
+        transform: translateY(-8px) rotate(1deg);
+    }
+}
+
+@keyframes sprout-sway-fast {
+    0% { transform: rotate(-5deg); }
+    100% { transform: rotate(8deg); }
+}
+@keyframes sprout-leaf-l-wave-fast {
+    0% { transform: rotate(-12deg) scale(0.85); }
+    100% { transform: rotate(14deg) scale(1.15); }
+}
+@keyframes sprout-leaf-r-wave-fast {
+    0% { transform: rotate(14deg) scale(0.85); }
+    100% { transform: rotate(-12deg) scale(1.15); }
 }
 

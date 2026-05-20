@@ -129,11 +129,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } else {
             // Default: aura
-            particle.classList.add('particle');
+            particle.classList.add('particle-aura');
             const size = Math.random() * 6 + 3;
             particle.style.width = `${size}px`;
             particle.style.height = `${size}px`;
-            particle.style.animationDuration = `${Math.random() * 5 + 7}s`;
+            const colors = ['rgba(236, 72, 153, 0.45)', 'rgba(139, 92, 246, 0.45)', 'rgba(6, 182, 212, 0.45)'];
+            particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+            particle.style.boxShadow = `0 0 8px ${particle.style.background}`;
+            particle.style.animationDuration = `${Math.random() * 6 + 8}s`;
         }
         
         particle.style.left = `${Math.random() * 100}vw`;
@@ -155,6 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 1000);
 
     setTimeout(() => {
+        document.body.classList.add('intensified');
         borderElem.classList.add('intensified');
     }, 10000);
 });
