@@ -75,24 +75,29 @@ body, html {
 }
 
 /* Intensified State (after 10s) */
-.marquee-border.intensified {
+body.theme-aura .marquee-border.intensified,
+body:not([class*="theme-"]) .marquee-border.intensified {
     background: rgba(0, 0, 0, 0.1);
 }
 
-.marquee-border.intensified .aura-glow {
+body.theme-aura .marquee-border.intensified .aura-glow,
+body:not([class*="theme-"]) .marquee-border.intensified .aura-glow {
     opacity: 0.75;
     filter: blur(100px); /* Sharper, brighter glow */
 }
 
-.marquee-border.intensified .aura-glow-1 {
+body.theme-aura .marquee-border.intensified .aura-glow-1,
+body:not([class*="theme-"]) .marquee-border.intensified .aura-glow-1 {
     background: radial-gradient(circle, rgba(244, 63, 94, 0.7) 0%, rgba(244, 63, 94, 0) 70%);
 }
 
-.marquee-border.intensified .aura-glow-2 {
+body.theme-aura .marquee-border.intensified .aura-glow-2,
+body:not([class*="theme-"]) .marquee-border.intensified .aura-glow-2 {
     background: radial-gradient(circle, rgba(217, 70, 239, 0.65) 0%, rgba(217, 70, 239, 0) 70%);
 }
 
-.marquee-border.intensified .aura-glow-3 {
+body.theme-aura .marquee-border.intensified .aura-glow-3,
+body:not([class*="theme-"]) .marquee-border.intensified .aura-glow-3 {
     background: radial-gradient(circle, rgba(245, 158, 11, 0.5) 0%, rgba(245, 158, 11, 0) 70%);
 }
 
@@ -379,10 +384,10 @@ body, html {
    星空冥想主题 (Zen Cosmic Theme)
    ============================================ */
 body.theme-zen .marquee-border {
-    background: rgba(4, 4, 15, 0.95);
+    background: rgba(4, 4, 15, 0.15);
     box-shadow: 
-        inset 0 0 150px rgba(10, 10, 30, 0.85),
-        inset 0 0 50px rgba(0, 0, 0, 0.9);
+        inset 0 0 120px rgba(10, 10, 30, 0.45),
+        inset 0 0 40px rgba(0, 0, 0, 0.55);
 }
 
 body.theme-zen .aura-glow-1 {
@@ -395,6 +400,48 @@ body.theme-zen .aura-glow-2 {
 
 body.theme-zen .aura-glow-3 {
     background: radial-gradient(circle, rgba(168, 85, 247, 0.25) 0%, rgba(168, 85, 247, 0) 70%);
+}
+
+/* 星空冥想 intensified state */
+body.theme-zen .marquee-border.intensified {
+    background: rgba(4, 4, 15, 0.25);
+    box-shadow: 
+        inset 0 0 120px rgba(139, 92, 246, 0.25),
+        inset 0 0 50px rgba(0, 0, 0, 0.6);
+}
+
+body.theme-zen .marquee-border.intensified .aura-glow {
+    opacity: 0.65;
+    filter: blur(100px);
+}
+
+body.theme-zen .marquee-border.intensified .aura-glow-1 {
+    background: radial-gradient(circle, rgba(168, 85, 247, 0.55) 0%, rgba(168, 85, 247, 0) 70%);
+}
+
+body.theme-zen .marquee-border.intensified .aura-glow-2 {
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.5) 0%, rgba(99, 102, 241, 0) 70%);
+}
+
+body.theme-zen .marquee-border.intensified .aura-glow-3 {
+    background: radial-gradient(circle, rgba(236, 72, 153, 0.4) 0%, rgba(236, 72, 153, 0) 70%);
+}
+
+/* Twinkle faster and drift slightly faster in intensified state */
+body.theme-zen .marquee-border.intensified ~ .particles-container .particle-star {
+    animation: star-twinkle-fast 3s ease-in-out infinite;
+    box-shadow: 0 0 12px #ffffff, 0 0 20px rgba(168, 85, 247, 0.7);
+}
+
+@keyframes star-twinkle-fast {
+    0%, 100% {
+        opacity: 0.2;
+        transform: scale(0.7) translateY(0);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.4) translateY(-80px);
+    }
 }
 
 body.theme-zen .badge {
@@ -412,6 +459,7 @@ body.theme-zen .glass-card {
     box-shadow: 
         0 30px 70px rgba(0, 0, 0, 0.6),
         0 0 35px rgba(59, 130, 246, 0.15);
+    animation: zen-card-breathe 8s ease-in-out infinite;
 }
 
 /* 繁星闪烁粒子 */
@@ -436,18 +484,18 @@ body.theme-zen .glass-card {
 
 /* 呼吸环 SVG 动画 */
 .zen-breathe-core {
-    animation: zen-breathe 4s ease-in-out infinite;
+    animation: zen-breathe 8s ease-in-out infinite;
     transform-origin: 50px 50px;
 }
 
 .zen-ripple-1 {
-    animation: zen-ripple 4s ease-in-out infinite;
+    animation: zen-ripple 8s ease-in-out infinite;
     transform-origin: 50px 50px;
 }
 
 .zen-ripple-2 {
-    animation: zen-ripple 4s ease-in-out infinite;
-    animation-delay: 2s;
+    animation: zen-ripple 8s ease-in-out infinite;
+    animation-delay: 4s;
     transform-origin: 50px 50px;
 }
 
@@ -478,15 +526,15 @@ body.theme-zen .glass-card {
    赛博霓虹主题 (Cyberpunk Grid Theme)
    ============================================ */
 body.theme-cyber .marquee-border {
-    background: rgba(10, 6, 18, 0.96);
+    background: rgba(10, 6, 18, 0.12);
     background-image: 
-        linear-gradient(rgba(6, 182, 212, 0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(6, 182, 212, 0.04) 1px, transparent 1px);
+        linear-gradient(rgba(6, 182, 212, 0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(6, 182, 212, 0.06) 1px, transparent 1px);
     background-size: 30px 30px;
     background-position: center;
     box-shadow: 
-        inset 0 0 150px rgba(236, 72, 153, 0.25),
-        inset 0 0 60px rgba(0, 0, 0, 0.9);
+        inset 0 0 120px rgba(236, 72, 153, 0.15),
+        inset 0 0 45px rgba(0, 0, 0, 0.5);
 }
 
 body.theme-cyber .aura-glow-1 {
@@ -499,6 +547,76 @@ body.theme-cyber .aura-glow-2 {
 
 body.theme-cyber .aura-glow-3 {
     background: radial-gradient(circle, rgba(244, 63, 94, 0.4) 0%, rgba(244, 63, 94, 0) 70%);
+}
+
+/* 赛博霓虹 intensified state */
+body.theme-cyber .marquee-border.intensified {
+    background: rgba(10, 6, 18, 0.2);
+    /* Make the grid lines glow and pulse slightly */
+    background-image: 
+        linear-gradient(rgba(6, 182, 212, 0.12) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(6, 182, 212, 0.12) 1px, transparent 1px);
+    box-shadow: 
+        inset 0 0 120px rgba(236, 72, 153, 0.3),
+        inset 0 0 50px rgba(6, 182, 212, 0.2);
+    animation: cyber-grid-shimmer 2s ease-in-out infinite alternate;
+}
+
+body.theme-cyber .marquee-border.intensified .aura-glow {
+    opacity: 0.8;
+    filter: blur(80px); /* Brighter and sharper glows */
+    animation: cyber-neon-pulse 2s ease-in-out infinite alternate;
+}
+
+body.theme-cyber .marquee-border.intensified .aura-glow-1 {
+    background: radial-gradient(circle, rgba(236, 72, 153, 0.75) 0%, rgba(236, 72, 153, 0) 70%); /* Neon Magenta Pink */
+}
+
+body.theme-cyber .marquee-border.intensified .aura-glow-2 {
+    background: radial-gradient(circle, rgba(6, 182, 212, 0.7) 0%, rgba(6, 182, 212, 0) 70%); /* Electric Cyan */
+}
+
+body.theme-cyber .marquee-border.intensified .aura-glow-3 {
+    background: radial-gradient(circle, rgba(244, 63, 94, 0.6) 0%, rgba(244, 63, 94, 0) 70%); /* Electric Hot Red */
+}
+
+/* Speed up cubical particles and make them glow more */
+body.theme-cyber .marquee-border.intensified ~ .particles-container .particle-cube {
+    animation: cyber-up-fast 3s linear infinite;
+    box-shadow: 0 0 15px rgba(6, 182, 212, 0.95), 0 0 8px rgba(236, 72, 153, 0.9);
+}
+
+@keyframes cyber-grid-shimmer {
+    0% { opacity: 0.85; }
+    100% { opacity: 1; filter: saturate(1.4); }
+}
+
+@keyframes cyber-neon-pulse {
+    0% {
+        opacity: 0.65;
+        transform: scale(0.95);
+    }
+    100% {
+        opacity: 0.85;
+        transform: scale(1.1);
+    }
+}
+
+@keyframes cyber-up-fast {
+    0% {
+        transform: translateY(110vh) rotate(0deg) scale(0.9);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-10vh) rotate(540deg) scale(0.5);
+        opacity: 0;
+    }
 }
 
 body.theme-cyber .badge {
@@ -591,10 +709,10 @@ body.theme-cyber .glass-card {
    森林朝露主题 (Forest Morning Theme)
    ============================================ */
 body.theme-forest .marquee-border {
-    background: rgba(8, 16, 12, 0.96);
+    background: rgba(8, 16, 12, 0.12);
     box-shadow: 
-        inset 0 0 150px rgba(16, 185, 129, 0.25),
-        inset 0 0 60px rgba(0, 0, 0, 0.9);
+        inset 0 0 120px rgba(16, 185, 129, 0.15),
+        inset 0 0 45px rgba(0, 0, 0, 0.45);
 }
 
 body.theme-forest .aura-glow-1 {
@@ -607,6 +725,70 @@ body.theme-forest .aura-glow-2 {
 
 body.theme-forest .aura-glow-3 {
     background: radial-gradient(circle, rgba(52, 211, 153, 0.3) 0%, rgba(52, 211, 153, 0) 70%);
+}
+
+/* 森林朝露 intensified state */
+body.theme-forest .marquee-border.intensified {
+    background: rgba(8, 16, 12, 0.2);
+    box-shadow: 
+        inset 0 0 120px rgba(16, 185, 129, 0.28),
+        inset 0 0 50px rgba(245, 158, 11, 0.15);
+}
+
+body.theme-forest .marquee-border.intensified .aura-glow {
+    opacity: 0.75;
+    filter: blur(90px);
+    animation: forest-breeze-sway 6s ease-in-out infinite alternate;
+}
+
+body.theme-forest .marquee-border.intensified .aura-glow-1 {
+    background: radial-gradient(circle, rgba(16, 185, 129, 0.65) 0%, rgba(16, 185, 129, 0) 70%); /* Deep rich emerald */
+}
+
+body.theme-forest .marquee-border.intensified .aura-glow-2 {
+    background: radial-gradient(circle, rgba(251, 191, 36, 0.55) 0%, rgba(251, 191, 36, 0) 70%); /* Golden morning sunlight */
+}
+
+body.theme-forest .marquee-border.intensified .aura-glow-3 {
+    background: radial-gradient(circle, rgba(52, 211, 153, 0.45) 0%, rgba(52, 211, 153, 0) 70%); /* Bright mint green */
+}
+
+/* Speed up falling leaves for intensified state */
+body.theme-forest .marquee-border.intensified ~ .particles-container .particle-leaf {
+    animation: leaf-fall-fast 5s linear infinite;
+    box-shadow: 0 0 8px rgba(52, 211, 153, 0.35);
+}
+
+@keyframes forest-breeze-sway {
+    0% {
+        transform: translate(0, 0) scale(1);
+    }
+    100% {
+        transform: translate(8vw, 5vh) scale(1.12);
+    }
+}
+
+@keyframes leaf-fall-fast {
+    0% {
+        transform: translateY(-10vh) translateX(0) rotate(0deg) scale(1.1);
+        opacity: 0;
+    }
+    15% {
+        opacity: 0.95;
+    }
+    45% {
+        transform: translateY(45vh) translateX(75px) rotate(360deg) scale(0.9);
+    }
+    75% {
+        transform: translateY(80vh) translateX(-40px) rotate(620deg) scale(0.7);
+    }
+    90% {
+        opacity: 0.95;
+    }
+    100% {
+        transform: translateY(110vh) translateX(45px) rotate(900deg) scale(0.5);
+        opacity: 0;
+    }
 }
 
 body.theme-forest .badge {
@@ -639,14 +821,20 @@ body.theme-forest .glass-card {
         transform: translateY(-10vh) translateX(0) rotate(0deg) scale(1);
         opacity: 0;
     }
-    10% {
-        opacity: 0.6;
+    15% {
+        opacity: 0.7;
+    }
+    45% {
+        transform: translateY(45vh) translateX(45px) rotate(220deg) scale(0.95);
+    }
+    75% {
+        transform: translateY(80vh) translateX(-20px) rotate(440deg) scale(0.8);
     }
     90% {
-        opacity: 0.6;
+        opacity: 0.7;
     }
     100% {
-        transform: translateY(110vh) translateX(70px) rotate(640deg) scale(0.6);
+        transform: translateY(110vh) translateX(30px) rotate(640deg) scale(0.6);
         opacity: 0;
     }
 }
@@ -689,5 +877,190 @@ body.theme-forest .glass-card {
 @keyframes sprout-sun-breathe {
     0%, 100% { opacity: 0.15; transform: scale(0.95); }
     50% { opacity: 0.35; transform: scale(1.15); }
+}
+
+/* ============================================
+   主题特效图层 (Theme Specific Effects)
+   ============================================ */
+.zen-shooting-star, .cyber-scanline, .forest-sunbeams {
+    display: none;
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+}
+
+body.theme-zen .zen-shooting-star {
+    display: block;
+}
+body.theme-cyber .cyber-scanline {
+    display: block;
+}
+body.theme-forest .forest-sunbeams {
+    display: block;
+}
+
+/* --- 星空冥想特效 --- */
+@keyframes zen-card-breathe {
+    0%, 100% {
+        box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6), 0 0 25px rgba(59, 130, 246, 0.1);
+        border-color: rgba(139, 92, 246, 0.12);
+    }
+    50% {
+        box-shadow: 0 35px 80px rgba(0, 0, 0, 0.65), 0 0 45px rgba(139, 92, 246, 0.22);
+        border-color: rgba(236, 72, 153, 0.25);
+    }
+}
+
+.zen-shooting-star {
+    position: absolute;
+    top: -10%;
+    left: 100%;
+    width: 120px;
+    height: 1.5px;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0));
+    transform: rotate(-35deg);
+    animation: shooting-star-run 14s ease-in-out infinite;
+    opacity: 0;
+}
+
+@keyframes shooting-star-run {
+    0% {
+        top: -10%;
+        left: 100%;
+        width: 0;
+        opacity: 0;
+    }
+    8% {
+        opacity: 1;
+        width: 120px;
+    }
+    15% {
+        top: 80%;
+        left: -20%;
+        width: 0;
+        opacity: 0;
+    }
+    100% {
+        top: 80%;
+        left: -20%;
+        width: 0;
+        opacity: 0;
+    }
+}
+
+/* --- 赛博霓虹特效 --- */
+body.theme-cyber .marquee-border {
+    animation: cyber-grid-scroll 16s linear infinite;
+}
+
+@keyframes cyber-grid-scroll {
+    0% { background-position: center 0px; }
+    100% { background-position: center 90px; }
+}
+
+.cyber-scanline {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 6px;
+    background: linear-gradient(180deg, rgba(6, 182, 212, 0.25), rgba(6, 182, 212, 0));
+    box-shadow: 0 0 12px rgba(6, 182, 212, 0.4);
+    animation: scanline-sweep 6s linear infinite;
+    opacity: 0.7;
+}
+
+@keyframes scanline-sweep {
+    0% { top: -10px; }
+    100% { top: 110vh; }
+}
+
+.cyber-joint-l, .cyber-joint-r {
+    animation: cyber-joint-blink 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes cyber-joint-blink {
+    0% {
+        fill: #06B6D4;
+        filter: drop-shadow(0 0 1px #06B6D4);
+    }
+    100% {
+        fill: #EC4899;
+        filter: drop-shadow(0 0 6px #EC4899);
+    }
+}
+
+.particle-binary {
+    position: absolute;
+    font-family: monospace;
+    font-weight: bold;
+    user-select: none;
+    pointer-events: none;
+    animation: cyber-up 6s linear infinite;
+    opacity: 0;
+}
+
+/* --- 森林朝露特效 --- */
+.forest-sunbeams {
+    background: radial-gradient(circle at 10% 10%, rgba(251, 191, 36, 0.08) 0%, transparent 60%);
+}
+
+.sunbeam {
+    position: absolute;
+    top: -30vh;
+    left: -30vw;
+    width: 80vw;
+    height: 160vh;
+    background: repeating-conic-gradient(
+        from 0deg,
+        transparent 0deg 8deg,
+        rgba(251, 191, 36, 0.035) 12deg 20deg,
+        transparent 24deg 32deg
+    );
+    transform-origin: 30% 30%;
+    filter: blur(12px);
+    mix-blend-mode: screen;
+}
+
+.sunbeam-1 {
+    animation: sunbeam-rotate-cw 45s linear infinite;
+}
+.sunbeam-2 {
+    animation: sunbeam-rotate-ccw 35s linear infinite;
+    opacity: 0.7;
+}
+
+@keyframes sunbeam-rotate-cw {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+@keyframes sunbeam-rotate-ccw {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(-360deg); }
+}
+
+.particle-dewdrop {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: dewdrop-float 7s ease-in-out infinite;
+}
+
+@keyframes dewdrop-float {
+    0% {
+        transform: translateY(110vh) scale(0.8);
+        opacity: 0;
+    }
+    15% {
+        opacity: 0.8;
+    }
+    85% {
+        opacity: 0.8;
+    }
+    100% {
+        transform: translateY(-10vh) scale(1.1);
+        opacity: 0;
+    }
 }
 

@@ -68,30 +68,65 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 3. Generate soft background floating particles based on theme
-    const particleCount = 18;
+    const particleCount = 20; // Slightly increased for richer aesthetics
     for (let i = 0; i < particleCount; i++) {
         const particle = document.createElement('div');
         
         if (bgStyle === 'zen') {
             particle.classList.add('particle-star');
-            const size = Math.random() * 3 + 1.5; // 1.5px to 4.5px
+            const size = Math.random() * 3.5 + 1.2; // 1.2px to 4.7px
             particle.style.width = `${size}px`;
             particle.style.height = `${size}px`;
+            
+            // Randomize star colors: white, soft purple, soft cyan
+            const colors = ['#ffffff', '#c084fc', '#38bdf8'];
+            const chosenColor = colors[Math.floor(Math.random() * colors.length)];
+            particle.style.background = chosenColor;
+            particle.style.boxShadow = `0 0 8px ${chosenColor}, 0 0 12px rgba(255, 255, 255, 0.3)`;
+            
             particle.style.animationDuration = `${Math.random() * 4 + 4}s`;
         } else if (bgStyle === 'cyber') {
-            particle.classList.add('particle-cube');
-            const size = Math.random() * 6 + 4; // 4px to 10px
-            particle.style.width = `${size}px`;
-            particle.style.height = `${size}px`;
-            particle.style.background = Math.random() > 0.5 ? 'rgba(6, 182, 212, 0.75)' : 'rgba(236, 72, 153, 0.75)';
-            particle.style.animationDuration = `${Math.random() * 3 + 4}s`;
+            if (Math.random() > 0.4) {
+                // Spawn Cyber block
+                particle.classList.add('particle-cube');
+                const size = Math.random() * 6 + 4; // 4px to 10px
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                const isCyan = Math.random() > 0.5;
+                particle.style.background = isCyan ? 'rgba(6, 182, 212, 0.75)' : 'rgba(236, 72, 153, 0.75)';
+                particle.style.boxShadow = isCyan ? '0 0 8px rgba(6, 182, 212, 0.5)' : '0 0 8px rgba(236, 72, 153, 0.5)';
+                particle.style.animationDuration = `${Math.random() * 3 + 4}s`;
+            } else {
+                // Spawn Binary digit (0 or 1)
+                particle.classList.add('particle-binary');
+                particle.textContent = Math.random() > 0.5 ? '1' : '0';
+                const fontSize = Math.random() * 5 + 9; // 9px to 14px
+                particle.style.fontSize = `${fontSize}px`;
+                const isCyan = Math.random() > 0.5;
+                particle.style.color = isCyan ? 'rgba(6, 182, 212, 0.8)' : 'rgba(236, 72, 153, 0.8)';
+                particle.style.textShadow = isCyan ? '0 0 5px rgba(6, 182, 212, 0.6)' : '0 0 5px rgba(236, 72, 153, 0.6)';
+                particle.style.animationDuration = `${Math.random() * 4 + 4}s`;
+            }
         } else if (bgStyle === 'forest') {
-            particle.classList.add('particle-leaf');
-            const size = Math.random() * 10 + 6; // 6px to 16px
-            particle.style.width = `${size}px`;
-            particle.style.height = `${size}px`;
-            particle.style.background = Math.random() > 0.5 ? 'rgba(52, 211, 153, 0.45)' : 'rgba(16, 185, 129, 0.4)';
-            particle.style.animationDuration = `${Math.random() * 5 + 6}s`;
+            if (Math.random() > 0.5) {
+                // Spawn Leaf
+                particle.classList.add('particle-leaf');
+                const size = Math.random() * 10 + 6; // 6px to 16px
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.background = Math.random() > 0.5 ? 'rgba(52, 211, 153, 0.55)' : 'rgba(16, 185, 129, 0.5)';
+                particle.style.transform = `rotate(${Math.random() * 360}deg)`;
+                particle.style.animationDuration = `${Math.random() * 5 + 6}s`;
+            } else {
+                // Spawn Shimmering Dewdrop
+                particle.classList.add('particle-dewdrop');
+                const size = Math.random() * 3 + 2; // 2px to 5px
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.background = 'rgba(255, 255, 255, 0.8)';
+                particle.style.boxShadow = '0 0 6px rgba(52, 211, 153, 0.8), 0 0 10px rgba(255, 255, 255, 0.6)';
+                particle.style.animationDuration = `${Math.random() * 4 + 4}s`;
+            }
         } else {
             // Default: aura
             particle.classList.add('particle');
