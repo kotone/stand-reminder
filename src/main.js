@@ -6,15 +6,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const intervalInput = document.getElementById('interval');
     const statusText = document.getElementById('status-text');
     const closeBtn = document.getElementById('close-btn');
+    const bgStyleSelect = document.getElementById('bg-style');
 
     // Load saved settings
     const savedInterval = localStorage.getItem('interval') || 45;
     const savedRunning = localStorage.getItem('isRunning');
+    const savedBgStyle = localStorage.getItem('bgStyle') || 'aura';
     // First launch: savedRunning is null, default to false
     const isRunning = savedRunning === 'true';
     
     intervalInput.value = savedInterval;
     toggleSwitch.checked = isRunning;
+    if (bgStyleSelect) {
+        bgStyleSelect.value = savedBgStyle;
+        bgStyleSelect.addEventListener('change', (e) => {
+            localStorage.setItem('bgStyle', e.target.value);
+        });
+    }
     
     updateStatusText();
 

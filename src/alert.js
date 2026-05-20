@@ -3,9 +3,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const centerElem = document.getElementById('centerElem');
     const particlesContainer = document.getElementById('particlesContainer');
     const footerText = document.getElementById('footerText');
+    const guideStep = document.getElementById('guideStep');
+    const guideText = document.getElementById('guideText');
 
-    // 1. Dynamic Exercise Database
-    const exercises = [
+    // 1. Get saved background style (default to 'aura')
+    const bgStyle = localStorage.getItem('bgStyle') || 'aura';
+    document.body.className = 'theme-' + bgStyle;
+
+    // 2. Select appropriate exercise/animation based on theme
+    const auraExercises = [
         {
             iconId: 'icon-neck',
             title: '颈部舒缓放松',
@@ -23,22 +29,37 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     ];
 
-    // 2. Select a random exercise and display it
-    const randomIdx = Math.floor(Math.random() * exercises.length);
-    const chosenExercise = exercises[randomIdx];
+    let chosenIconId = '';
+    
+    if (bgStyle === 'zen') {
+        chosenIconId = 'icon-zen-breathe';
+        guideStep.textContent = '呼吸冥想静心';
+        guideText.textContent = '跟随屏幕中央的禅意呼吸光环：吸气4秒（光环胀大），呼气4秒（光环缩小）。放松大脑。';
+    } else if (bgStyle === 'cyber') {
+        chosenIconId = 'icon-cyber-stretch';
+        guideStep.textContent = '赛博关节激活';
+        guideText.textContent = '跟着赛博小人动画：双手往后拉伸，挤压肩胛骨，挺胸抬头，激活背部和肩关节，重复5次。';
+    } else if (bgStyle === 'forest') {
+        chosenIconId = 'icon-forest-sprout';
+        guideStep.textContent = '眺望远方与全身舒展';
+        guideText.textContent = '站直身体，闭目深呼吸。然后睁开眼，将视线投向窗外的远方或绿色植物，感受植物摇曳，放松双眼。';
+    } else {
+        // Default: aura
+        const randomIdx = Math.floor(Math.random() * auraExercises.length);
+        const chosenExercise = auraExercises[randomIdx];
+        chosenIconId = chosenExercise.iconId;
+        guideStep.textContent = chosenExercise.title;
+        guideText.textContent = chosenExercise.desc;
+    }
 
     // Show the chosen icon
     document.querySelectorAll('.stretch-icon').forEach(icon => {
-        if (icon.id === chosenExercise.iconId) {
+        if (icon.id === chosenIconId) {
             icon.classList.remove('hidden');
         } else {
             icon.classList.add('hidden');
         }
     });
-
-    // Update text content
-    document.getElementById('guideStep').textContent = chosenExercise.title;
-    document.getElementById('guideText').textContent = chosenExercise.desc;
 
     // Show saved working duration if available
     const savedInterval = localStorage.getItem('interval') || 45;
@@ -46,39 +67,58 @@ document.addEventListener('DOMContentLoaded', () => {
         footerText.textContent = `已连续工作 ${savedInterval} 分钟，该起立伸展啦`;
     }
 
-    // 3. Generate soft background floating particles
+    // 3. Generate soft background floating particles based on theme
     const particleCount = 18;
     for (let i = 0; i < particleCount; i++) {
         const particle = document.createElement('div');
-        particle.classList.add('particle');
         
-        const size = Math.random() * 6 + 3; // 3px to 9px
-        particle.style.width = `${size}px`;
-        particle.style.height = `${size}px`;
+        if (bgStyle === 'zen') {
+            particle.classList.add('particle-star');
+            const size = Math.random() * 3 + 1.5; // 1.5px to 4.5px
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.animationDuration = `${Math.random() * 4 + 4}s`;
+        } else if (bgStyle === 'cyber') {
+            particle.classList.add('particle-cube');
+            const size = Math.random() * 6 + 4; // 4px to 10px
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.background = Math.random() > 0.5 ? 'rgba(6, 182, 212, 0.75)' : 'rgba(236, 72, 153, 0.75)';
+            particle.style.animationDuration = `${Math.random() * 3 + 4}s`;
+        } else if (bgStyle === 'forest') {
+            particle.classList.add('particle-leaf');
+            const size = Math.random() * 10 + 6; // 6px to 16px
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.background = Math.random() > 0.5 ? 'rgba(52, 211, 153, 0.45)' : 'rgba(16, 185, 129, 0.4)';
+            particle.style.animationDuration = `${Math.random() * 5 + 6}s`;
+        } else {
+            // Default: aura
+            particle.classList.add('particle');
+            const size = Math.random() * 6 + 3;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.animationDuration = `${Math.random() * 5 + 7}s`;
+        }
+        
         particle.style.left = `${Math.random() * 100}vw`;
         
         const delay = Math.random() * 8;
-        const duration = Math.random() * 5 + 7; // 7s to 12s
-        particle.style.animationDelay = `-${delay}s`; // Start immediately at random state
-        particle.style.animationDuration = `${duration}s`;
-        
+        particle.style.animationDelay = `-${delay}s`;
         particle.style.opacity = Math.random() * 0.4 + 0.15;
         
         particlesContainer.appendChild(particle);
     }
 
     // 4. Smooth multi-stage transitions
-    // Stage 1: Immediate light active aura
     setTimeout(() => {
         borderElem.classList.add('active');
     }, 50);
 
-    // Stage 2: Central glass card slides up with spring
     setTimeout(() => {
         centerElem.classList.add('show');
     }, 1000);
 
-    // Stage 3: Intensify aura (more intense colors) after 10s
     setTimeout(() => {
         borderElem.classList.add('intensified');
     }, 10000);
