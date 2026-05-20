@@ -84,14 +84,40 @@ fn get_work_area(_x: i32, _y: i32, _width: u32, _height: u32) -> Option<(i32, i3
 struct AppState {
     sender: Mutex<Option<mpsc::Sender<()>>>,
     minutes: Mutex<u64>,
+    next_timestamp: Mutex<Option<u64>>,
+}
+
+fn now_secs() -> u64 {
+    std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap_or(std::time::Duration::ZERO)
+        .as_secs()
+}
+
+/// Internal stop: cancels timer + updates tray, but does NOT emit events to frontend.
+/// Used when start_reminder calls stop internally to avoid UI flicker.
+fn stop_reminder_internal(app_handle: &tauri::AppHandle, state: &AppState) {
+    let mut sender_opt = state.sender.lock().unwrap();
+    if let Some(sender) = sender_opt.take() {
+        let _ = sender.try_send(());
+    }
+    *state.next_timestamp.lock().unwrap() = None;
+
+    let tray = app_handle.tray_handle();
+    let _ = tray.get_item("start").set_enabled(true);
+    let _ = tray.get_item("stop").set_enabled(false);
+    let _ = tray.get_item("next").set_enabled(false);
+
+    close_alerts(app_handle);
 }
 
 #[tauri::command]
 fn start_reminder(minutes: u64, app_handle: tauri::AppHandle, state: tauri::State<AppState>) {
-    // Stop existing timer and close any alerts
-    stop_reminder(app_handle.clone(), state.clone());
+    // Stop existing timer and close any alerts (internal, no event emitted)
+    stop_reminder_internal(&app_handle, &state);
 
     *state.minutes.lock().unwrap() = minutes;
+    *state.next_timestamp.lock().unwrap() = Some(now_secs() + minutes * 60);
 
     let tray = app_handle.tray_handle();
     let _ = tray.get_item("start").set_enabled(false);
@@ -111,6 +137,8 @@ fn start_reminder(minutes: u64, app_handle: tauri::AppHandle, state: tauri::Stat
                 _ = tokio::time::sleep(Duration::from_secs(1)) => {
                     if is_locked() {
                         elapsed = 0;
+                        let state = app_handle.state::<AppState>();
+                        *state.next_timestamp.lock().unwrap() = Some(now_secs() + target);
                         continue;
                     }
                     
@@ -120,6 +148,9 @@ fn start_reminder(minutes: u64, app_handle: tauri::AppHandle, state: tauri::Stat
                             show_alerts(&app_handle);
                             let _ = app_handle.tray_handle().get_item("next").set_enabled(true);
                             alert_shown = true;
+                            
+                            let state = app_handle.state::<AppState>();
+                            *state.next_timestamp.lock().unwrap() = None;
                         }
                     }
                 }
@@ -133,17 +164,7 @@ fn start_reminder(minutes: u64, app_handle: tauri::AppHandle, state: tauri::Stat
 
 #[tauri::command]
 fn stop_reminder(app_handle: tauri::AppHandle, state: tauri::State<AppState>) {
-    let mut sender_opt = state.sender.lock().unwrap();
-    if let Some(sender) = sender_opt.take() {
-        let _ = sender.try_send(());
-    }
-    
-    let tray = app_handle.tray_handle();
-    let _ = tray.get_item("start").set_enabled(true);
-    let _ = tray.get_item("stop").set_enabled(false);
-    let _ = tray.get_item("next").set_enabled(false);
-    
-    close_alerts(&app_handle);
+    stop_reminder_internal(&app_handle, &state);
 
     // Notify frontend to update UI toggle
     let _ = app_handle.emit_all("reminder-stopped", ());
@@ -219,6 +240,11 @@ fn close_alerts(app_handle: &tauri::AppHandle) {
     }
 }
 
+#[tauri::command]
+fn get_next_reminder_time(state: tauri::State<AppState>) -> Option<u64> {
+    *state.next_timestamp.lock().unwrap()
+}
+
 fn main() {
     let show = CustomMenuItem::new("show".to_string(), "打开设置");
     let start = CustomMenuItem::new("start".to_string(), "启动提醒");
@@ -240,7 +266,8 @@ fn main() {
     tauri::Builder::default()
         .manage(AppState {
             sender: Mutex::new(None),
-            minutes: Mutex::new(45), // Default value
+            minutes: Mutex::new(45),
+            next_timestamp: Mutex::new(None),
         })
         .system_tray(tray)
         .on_system_tray_event(|app, event| match event {
@@ -273,7 +300,8 @@ fn main() {
         .invoke_handler(tauri::generate_handler![
             start_reminder,
             stop_reminder,
-            show_settings
+            show_settings,
+            get_next_reminder_time
         ])
         .setup(|app| {
             // Initially show settings window

@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const statusText = document.getElementById('status-text');
     const closeBtn = document.getElementById('close-btn');
     const bgStyleSelect = document.getElementById('bg-style');
+    const nextReminderEl = document.getElementById('next-reminder');
 
     // Load saved settings
     const savedInterval = localStorage.getItem('interval') || 45;
@@ -52,14 +53,14 @@ document.addEventListener('DOMContentLoaded', () => {
         await appWindow.hide(); // Hide to tray
     });
 
-    toggleSwitch.addEventListener('change', (e) => {
+    toggleSwitch.addEventListener('change', async (e) => {
         const checked = e.target.checked;
         localStorage.setItem('isRunning', checked);
         
         if (checked) {
-            startReminder();
+            await startReminder();
         } else {
-            stopReminder();
+            await stopReminder();
         }
         updateStatusText();
     });
@@ -77,23 +78,49 @@ document.addEventListener('DOMContentLoaded', () => {
         updateStatusText();
     });
 
-    function updateStatusText() {
+    async function updateStatusText() {
         const container = document.querySelector('.status-container');
         if (toggleSwitch.checked) {
             statusText.textContent = `每 ${intervalInput.value} 分钟提醒一次`;
             if (container) container.classList.add('active');
+            
+            try {
+                const nextTimestamp = await invoke('get_next_reminder_time');
+                if (nextTimestamp && nextReminderEl) {
+                    const nextTime = new Date(nextTimestamp * 1000);
+                    const hours = String(nextTime.getHours()).padStart(2, '0');
+                    const mins = String(nextTime.getMinutes()).padStart(2, '0');
+                    nextReminderEl.textContent = `下次提醒时间：${hours}:${mins}`;
+                } else if (nextReminderEl) {
+                    nextReminderEl.textContent = '下次提醒时间：--:--';
+                }
+            } catch (e) {
+                console.error(e);
+            }
         } else {
             statusText.textContent = '已停止';
             if (container) container.classList.remove('active');
+            if (nextReminderEl) {
+                nextReminderEl.textContent = '下次提醒时间：--:--';
+            }
         }
     }
 
     async function startReminder() {
         const minutes = parseInt(intervalInput.value) || 45;
         await invoke('start_reminder', { minutes });
+        updateStatusText();
     }
 
     async function stopReminder() {
         await invoke('stop_reminder');
+        updateStatusText();
     }
+
+    // Refresh next reminder time when window gets focus (e.g. after unlock)
+    appWindow.onFocusChanged(({ payload: isFocused }) => {
+        if (isFocused) {
+            updateStatusText();
+        }
+    });
 });
