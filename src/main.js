@@ -83,6 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (toggleSwitch.checked) {
             statusText.textContent = `每 ${intervalInput.value} 分钟提醒一次`;
             if (container) container.classList.add('active');
+            if (nextReminderEl) nextReminderEl.style.display = 'block';
             
             try {
                 const nextTimestamp = await invoke('get_next_reminder_time');
@@ -101,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
             statusText.textContent = '已停止';
             if (container) container.classList.remove('active');
             if (nextReminderEl) {
-                nextReminderEl.textContent = '下次提醒时间：--:--';
+                nextReminderEl.style.display = 'none';
             }
         }
     }

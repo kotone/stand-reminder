@@ -182,7 +182,7 @@ fn show_settings(app_handle: tauri::AppHandle) {
             WindowUrl::App("index.html".into()),
         )
         .title("StandReminder")
-        .inner_size(320.0, 450.0)
+        .inner_size(320.0, 480.0)
         .resizable(false)
         .decorations(false)
         .transparent(true)
