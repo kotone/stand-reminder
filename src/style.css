@@ -33,11 +33,10 @@ body {
     height: 455px;
     background-color: #141419; /* Opaque background to prevent text leak-through */
     border-radius: 24px;
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.14);
     box-shadow: 
-        0 20px 50px rgba(0, 0, 0, 0.45),
-        inset 0 1px 0 rgba(255, 255, 255, 0.15),
-        0 0 30px rgba(139, 92, 246, 0.1);
+        inset 0 1px 0 rgba(255, 255, 255, 0.2),
+        inset 0 0 20px rgba(255, 255, 255, 0.02);
     padding: 24px 20px;
     display: flex;
     flex-direction: column;
