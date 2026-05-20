@@ -96,7 +96,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: StandReminder-Portable
-          path: src-tauri/target/release/stand-reminder.exe
+          path: src-tauri/target/release/StandReminder.exe
 
       # 上传 NSIS 安装包
       - name: Upload NSIS Installer
@@ -112,11 +112,11 @@ jobs:
         with:
           draft: true
           files: |
-            src-tauri/target/release/stand-reminder.exe
+            src-tauri/target/release/StandReminder.exe
             src-tauri/target/release/bundle/nsis/*.exe
           body: |
             ## 下载说明
             - **StandReminder_x.x.x_x64-setup.exe** — 安装版（推荐，自动安装 WebView2 Runtime）
-            - **stand-reminder.exe** — 免安装版（需系统已安装 WebView2 Runtime）
+            - **StandReminder.exe** — 免安装版（需系统已安装 WebView2 Runtime）
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
