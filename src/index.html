@@ -8,24 +8,46 @@
 </head>
 <body>
     <div class="container">
+        <!-- Close button at the very top right -->
+        <button id="close-btn" class="close-btn" title="隐藏到托盘">
+            <svg width="12" height="12" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 1L13 13M1 13L13 1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+        </button>
+
         <div class="header">
-            <button id="close-btn" class="close-btn">
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M1 1L13 13M1 13L13 1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <!-- Animated Premium Logo -->
+            <div class="app-logo">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Shifting gradient ring -->
+                    <circle cx="50" cy="50" r="40" stroke="url(#logo-grad)" stroke-width="5" stroke-dasharray="180 50" class="logo-ring" />
+                    <!-- Standing figure icon -->
+                    <circle cx="50" cy="32" r="7" fill="white" />
+                    <path d="M42 68 L46 48 L50 58 L54 48 L58 68" stroke="white" stroke-width="4.5" stroke-linecap="round" />
+                    <path d="M50 39 L50 48" stroke="white" stroke-width="4.5" />
+                    <!-- Linear gradient definition -->
+                    <defs>
+                        <linearGradient id="logo-grad" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0%" stop-color="#8B5CF6" />
+                            <stop offset="100%" stop-color="#EC4899" />
+                        </linearGradient>
+                    </defs>
                 </svg>
-            </button>
+            </div>
             <h1>站立提醒</h1>
-            <p>关注你的健康</p>
+            <p>StandReminder · 呵护健康</p>
         </div>
         
         <div class="card">
             <div class="row">
                 <label for="interval">提醒间隔（分钟）</label>
-                <input type="number" id="interval" value="45" min="1" max="120">
+                <div class="input-wrapper">
+                    <input type="number" id="interval" value="45" min="1" max="120">
+                </div>
             </div>
             <div class="divider"></div>
             <div class="row">
-                <span>启用提醒</span>
+                <span>启用健康提醒</span>
                 <label class="switch">
                     <input type="checkbox" id="toggle-switch">
                     <span class="slider"></span>
@@ -33,8 +55,11 @@
             </div>
         </div>
         
-        <div class="status-text" id="status-text">
-            已停止
+        <div class="status-container">
+            <div class="status-badge">
+                <span class="status-dot" id="status-dot"></span>
+                <span class="status-text" id="status-text">已停止</span>
+            </div>
         </div>
     </div>
     <script src="main.js"></script>

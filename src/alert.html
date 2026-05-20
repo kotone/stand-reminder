@@ -1,20 +1,80 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alert</title>
+    <title>站立健康提示</title>
     <link rel="stylesheet" href="alert.css">
 </head>
 
 <body>
-    <div class="marquee-border" id="borderElem"></div>
+    <!-- Flowing Aurora Border -->
+    <div class="marquee-border" id="borderElem">
+        <div class="aura-glow aura-glow-1"></div>
+        <div class="aura-glow aura-glow-2"></div>
+        <div class="aura-glow aura-glow-3"></div>
+    </div>
+
+    <!-- Floating Particles in Background -->
+    <div class="particles-container" id="particlesContainer"></div>
+
+    <!-- Central Glassmorphism Alert Card -->
     <div class="center-alert" id="centerElem">
-        <div class="pulse-circle">
-            <div class="pulse-text">该动一动啦</div>
+        <div class="glass-card">
+            <!-- Top badge -->
+            <div class="badge">健康提醒</div>
+            
+            <!-- Dynamic SVG Exercise Icon Area -->
+            <div class="icon-section">
+                <!-- Icon 1: Neck Release (颈部放松) -->
+                <svg id="icon-neck" class="stretch-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="32" r="10" stroke="white" stroke-width="4" class="neck-head" />
+                    <path d="M25 75 C 35 55, 65 55, 75 75" stroke="white" stroke-width="4" stroke-linecap="round" class="neck-body" />
+                    <!-- Arrows indicating rotation/tilt -->
+                    <path d="M30 25 Q 40 12 50 12 Q 60 12 70 25" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-dasharray="4 4" stroke-linecap="round" />
+                    <path d="M27 21 L31 26 L25 26 Z" fill="rgba(255,255,255,0.8)" />
+                    <path d="M73 21 L69 26 L75 26 Z" fill="rgba(255,255,255,0.8)" />
+                </svg>
+
+                <!-- Icon 2: Shoulder Roll (肩部舒展) -->
+                <svg id="icon-shoulder" class="stretch-icon hidden" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="25" r="9" stroke="white" stroke-width="4" class="shoulder-head" />
+                    <path d="M25 65 C 35 48, 65 48, 75 65" stroke="white" stroke-width="4" stroke-linecap="round" />
+                    <!-- Arms forming shoulder circles -->
+                    <path d="M 22 58 A 8 8 0 1 1 22 58.1" stroke="rgba(255,255,255,0.9)" stroke-width="3.5" stroke-linecap="round" class="shoulder-spin-left" />
+                    <path d="M 78 58 A 8 8 0 1 1 78 58.1" stroke="rgba(255,255,255,0.9)" stroke-width="3.5" stroke-linecap="round" class="shoulder-spin-right" />
+                </svg>
+
+                <!-- Icon 3: Reach High (向上伸展) -->
+                <svg id="icon-stretch" class="stretch-icon hidden" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="38" r="9" stroke="white" stroke-width="4" class="stretch-head" />
+                    <path d="M35 80 C 42 62, 58 62, 65 80" stroke="white" stroke-width="4" stroke-linecap="round" />
+                    <!-- Arms stretching up -->
+                    <path d="M25 55 Q 35 45 42 22 Q 47 10 50 10 Q 53 10 58 22 Q 65 45 75 55" stroke="white" stroke-width="4" stroke-linecap="round" class="stretch-arms" />
+                    <!-- Sparkles of energy -->
+                    <path d="M50 3 L50 7" stroke="rgba(255,255,255,0.9)" stroke-width="2" stroke-linecap="round" class="sparkle-1" />
+                    <path d="M42 5 L45 8" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round" class="sparkle-2" />
+                    <path d="M58 5 L55 8" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round" class="sparkle-3" />
+                </svg>
+            </div>
+
+            <!-- Health Guideline Text -->
+            <div class="content-section">
+                <h2 class="title" id="alertTitle">该站起来活动一下啦</h2>
+                <div class="tips-container">
+                    <p class="guide-subtitle" id="guideStep">加载中...</p>
+                    <p class="guide-desc" id="guideText">跟着上方的动画舒缓身体吧</p>
+                </div>
+            </div>
+
+            <!-- Visual feedback / progress ring at bottom of card -->
+            <div class="glass-footer">
+                <span class="footer-tip" id="footerText">关注健康，拒绝久坐</span>
+            </div>
         </div>
     </div>
+    
     <script src="alert.js"></script>
 </body>
 

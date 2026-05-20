@@ -51,12 +51,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function updateStatusText() {
+        const container = document.querySelector('.status-container');
         if (toggleSwitch.checked) {
             statusText.textContent = `每 ${intervalInput.value} 分钟提醒一次`;
-            statusText.style.color = '#34C759';
+            if (container) container.classList.add('active');
         } else {
             statusText.textContent = '已停止';
-            statusText.style.color = '#8E8E93';
+            if (container) container.classList.remove('active');
         }
     }
 
