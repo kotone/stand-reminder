@@ -10,6 +10,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const bgStyleSelect = document.getElementById('bg-style');
     const nextReminderEl = document.getElementById('next-reminder');
 
+    // --- Window drag support ---
+    // CSS `-webkit-app-region: drag` is unreliable on Windows with transparent Tauri windows.
+    // Use Tauri's JS API instead for reliable window dragging.
+    const container = document.querySelector('.container');
+    const noDragSelectors = 'input, select, button, .switch, .close-btn, .card';
+    container.addEventListener('mousedown', (e) => {
+        // Don't start drag if user clicked on an interactive element
+        if (e.target.closest(noDragSelectors)) return;
+        appWindow.startDragging();
+    });
+
     // Load saved settings
     const savedInterval = localStorage.getItem('interval') || 45;
     const savedRunning = localStorage.getItem('isRunning');
