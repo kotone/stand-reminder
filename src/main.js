@@ -1,5 +1,6 @@
 const { invoke } = window.__TAURI__.tauri;
 const { appWindow } = window.__TAURI__.window;
+const { listen } = window.__TAURI__.event;
 
 document.addEventListener('DOMContentLoaded', () => {
     const toggleSwitch = document.getElementById('toggle-switch');
@@ -30,6 +31,23 @@ document.addEventListener('DOMContentLoaded', () => {
         startReminder();
     }
 
+    // Listen for backend events (e.g. tray stop/start)
+    listen('reminder-stopped', () => {
+        toggleSwitch.checked = false;
+        localStorage.setItem('isRunning', false);
+        updateStatusText();
+    });
+
+    listen('reminder-started', (event) => {
+        toggleSwitch.checked = true;
+        localStorage.setItem('isRunning', true);
+        if (event.payload && event.payload.minutes) {
+            intervalInput.value = event.payload.minutes;
+            localStorage.setItem('interval', event.payload.minutes);
+        }
+        updateStatusText();
+    });
+
     closeBtn.addEventListener('click', async () => {
         await appWindow.hide(); // Hide to tray
     });
@@ -56,6 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Restart with new interval
             startReminder();
         }
+        updateStatusText();
     });
 
     function updateStatusText() {

@@ -42,7 +42,6 @@ body {
     display: flex;
     flex-direction: column;
     position: relative;
-    overflow: hidden;
     z-index: 1;
     -webkit-app-region: drag; /* Make the entire panel draggable by default */
 }

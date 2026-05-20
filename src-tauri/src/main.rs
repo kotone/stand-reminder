@@ -144,6 +144,9 @@ fn stop_reminder(app_handle: tauri::AppHandle, state: tauri::State<AppState>) {
     let _ = tray.get_item("next").set_enabled(false);
     
     close_alerts(&app_handle);
+
+    // Notify frontend to update UI toggle
+    let _ = app_handle.emit_all("reminder-stopped", ());
 }
 
 #[tauri::command]
@@ -252,6 +255,7 @@ fn main() {
                     "start" => {
                         let minutes = *app.state::<AppState>().minutes.lock().unwrap();
                         start_reminder(minutes, app.clone(), app.state::<AppState>());
+                        let _ = app.emit_all("reminder-started", serde_json::json!({ "minutes": minutes }));
                     }
                     "stop" => {
                         stop_reminder(app.clone(), app.state::<AppState>());
@@ -259,6 +263,7 @@ fn main() {
                     "next" => {
                         let minutes = *app.state::<AppState>().minutes.lock().unwrap();
                         start_reminder(minutes, app.clone(), app.state::<AppState>());
+                        let _ = app.emit_all("reminder-started", serde_json::json!({ "minutes": minutes }));
                     }
                     _ => {}
                 }
