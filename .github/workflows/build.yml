@@ -89,7 +89,7 @@ jobs:
 
       # 使用 Tauri CLI 构建，同时产出免安装 EXE 和 NSIS 安装包
       - name: Build with Tauri
-        run: npx -y @tauri-apps/cli build
+        run: npx -y @tauri-apps/cli@1 build
 
       # 上传免安装的 EXE 文件
       - name: Upload Portable EXE
