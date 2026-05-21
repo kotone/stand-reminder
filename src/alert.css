@@ -417,8 +417,21 @@ body:not([class*="theme-"]) .aura-waves {
 }
 
 /* ============================================
-   星空冥想主题 (Zen Cosmic Theme)
-   ============================================ */
+#glcanvas {
+    position: absolute;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 2.5s ease-in-out;
+}
+
+body.theme-zen #glcanvas {
+    opacity: 1;
+}
+
 body.theme-zen .marquee-border {
     background: rgba(4, 4, 15, 0.15);
     box-shadow: 
