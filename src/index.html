@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>站立提醒</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <div class="container">
         <!-- Close button at the very top right -->
         <button id="close-btn" class="close-btn" title="隐藏到托盘">
             <svg width="12" height="12" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M1 1L13 13M1 13L13 1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <path d="M1 1L13 13M1 13L13 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
             </svg>
         </button>
 
@@ -20,10 +22,12 @@
             <div class="app-logo">
                 <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <!-- Shifting gradient ring -->
-                    <circle cx="50" cy="50" r="40" stroke="url(#logo-grad)" stroke-width="5" stroke-dasharray="180 50" class="logo-ring" />
+                    <circle cx="50" cy="50" r="40" stroke="url(#logo-grad)" stroke-width="5" stroke-dasharray="180 50"
+                        class="logo-ring" />
                     <!-- Standing figure icon -->
                     <circle cx="50" cy="32" r="7" fill="white" />
-                    <path d="M42 68 L46 48 L50 58 L54 48 L58 68" stroke="white" stroke-width="4.5" stroke-linecap="round" />
+                    <path d="M42 68 L46 48 L50 58 L54 48 L58 68" stroke="white" stroke-width="4.5"
+                        stroke-linecap="round" />
                     <path d="M50 39 L50 48" stroke="white" stroke-width="4.5" />
                     <!-- Linear gradient definition -->
                     <defs>
@@ -37,7 +41,7 @@
             <h1>站立提醒</h1>
             <p>StandReminder · 呵护健康</p>
         </div>
-        
+
         <div class="card">
             <div class="row">
                 <label for="interval">提醒间隔（分钟）</label>
@@ -50,10 +54,10 @@
                 <label for="bg-style">提醒主题风格</label>
                 <div class="select-wrapper">
                     <select id="bg-style">
-                        <option value="aura">极光流光 (经典)</option>
-                        <option value="zen">星空冥想 (治愈)</option>
-                        <option value="cyber">赛博霓虹 (炫酷)</option>
-                        <option value="forest">森林朝露 (清新)</option>
+                        <option value="aura">极光流光</option>
+                        <option value="zen">星空冥想</option>
+                        <option value="cyber">赛博霓虹</option>
+                        <option value="forest">森林朝露</option>
                     </select>
                 </div>
             </div>
@@ -66,7 +70,7 @@
                 </label>
             </div>
         </div>
-        
+
         <div class="status-container">
             <div class="status-badge">
                 <span class="status-dot" id="status-dot"></span>
@@ -77,4 +81,5 @@
     </div>
     <script src="main.js"></script>
 </body>
+
 </html>
