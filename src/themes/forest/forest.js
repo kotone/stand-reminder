@@ -85,11 +85,4 @@ export function initTheme(themeEffectsLayer, particlesContainer, iconSection) {
         particle.style.opacity = Math.random() * 0.4 + 0.15;
         particlesContainer.appendChild(particle);
     }
-
-    // 5. 返回运动提示
-    return {
-        iconId: 'icon-forest-sprout',
-        title: '眺望远方与全身舒展',
-        desc: '站直身体，闭目深呼吸。然后睁开眼，将视线投向窗外的远方或绿色植物，感受植物摇曳，放松双眼。'
-    };
 }

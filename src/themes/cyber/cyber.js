@@ -55,11 +55,4 @@ export function initTheme(themeEffectsLayer, particlesContainer, iconSection) {
         particle.style.opacity = Math.random() * 0.4 + 0.15;
         particlesContainer.appendChild(particle);
     }
-
-    // 4. 返回运动提示
-    return {
-        iconId: 'icon-cyber-stretch',
-        title: '赛博关节激活',
-        desc: '跟着赛博小人动画：双手往后拉伸，挤压肩胛骨，挺胸抬头，激活背部和肩关节，重复5次。'
-    };
 }

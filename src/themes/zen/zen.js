@@ -72,13 +72,6 @@ export function initTheme(themeEffectsLayer, particlesContainer, iconSection) {
 
     // 5. 初始化 WebGL 黑洞
     initBlackHole();
-
-    // 6. 返回运动提示
-    return {
-        iconId: 'icon-zen-breathe',
-        title: '呼吸冥想静心',
-        desc: '跟随屏幕中央的禅意呼吸光环：吸气4秒（光环胀大），呼气4秒（光环缩小）。放松大脑。'
-    };
 }
 
 /* ============================================

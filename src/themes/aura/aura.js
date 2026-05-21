@@ -59,26 +59,15 @@ const AURORA_WAVES = `
         </svg>
     </div>`;
 
-const exercises = [
-    { iconId: 'icon-neck', title: '颈部舒缓放松', desc: '双肩下沉，将头部缓缓向左侧倾斜，感受右侧拉伸，保持3秒。然后换右侧重复。' },
-    { iconId: 'icon-shoulder', title: '双肩绕圈放松', desc: '双臂自然下垂。双肩由前向上、向后画圈绕行，重复5次，随后反方向画圈5次。' },
-    { iconId: 'icon-stretch', title: '双手向上拉伸', desc: '十指交叉，掌心向上翻转。吸气时手臂努力向上推，挺拔脊柱，呼气还原，重复3次。' },
-];
-
-const iconMap = {
-    'icon-neck': ICON_NECK,
-    'icon-shoulder': ICON_SHOULDER,
-    'icon-stretch': ICON_STRETCH,
-};
+const ICONS = [ICON_NECK, ICON_SHOULDER, ICON_STRETCH];
 
 export function initTheme(themeEffectsLayer, particlesContainer, iconSection) {
     // 1. 注入极光波浪背景
     themeEffectsLayer.insertAdjacentHTML('beforeend', AURORA_WAVES);
 
-    // 2. 注入所有运动图标
-    for (const key in iconMap) {
-        iconSection.insertAdjacentHTML('beforeend', iconMap[key]);
-    }
+    // 2. 随机注入一个运动图标
+    const chosenIcon = ICONS[Math.floor(Math.random() * ICONS.length)];
+    iconSection.insertAdjacentHTML('beforeend', chosenIcon);
 
     // 3. 生成极光粒子
     const particleCount = 20;
@@ -97,8 +86,4 @@ export function initTheme(themeEffectsLayer, particlesContainer, iconSection) {
         particle.style.opacity = Math.random() * 0.4 + 0.15;
         particlesContainer.appendChild(particle);
     }
-
-    // 4. 随机选择运动提示
-    const chosen = exercises[Math.floor(Math.random() * exercises.length)];
-    return { iconId: chosen.iconId, title: chosen.title, desc: chosen.desc };
 }

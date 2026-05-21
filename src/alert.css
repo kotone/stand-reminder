@@ -264,6 +264,21 @@ body, html {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.tips-container.tip-fade-out {
+    opacity: 0;
+    transform: translateY(6px);
+}
+
+.tips-container.tip-fade-in {
+    animation: tip-slide-in 0.4s ease forwards;
+}
+
+@keyframes tip-slide-in {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .guide-subtitle {
