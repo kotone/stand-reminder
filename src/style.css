@@ -240,8 +240,8 @@ select {
     outline: none;
     cursor: pointer;
     transition: all 0.25s ease;
-    text-align-last: right;
-    padding-right: 4px;
+    text-align-last: left;
+    padding-left: 8px;
 }
 
 select:focus {

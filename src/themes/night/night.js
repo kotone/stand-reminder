@@ -88,8 +88,13 @@ const fsSource = `#version 300 es
     col = sqrt(vec3(col.r*col.r+col.g*col.g+col.b*col.b))/3.;
     col *= palette(5.2+sqrt(col.r*col.r+col.g*col.g+col.b*col.b)/3.);
 
-    fragColor = vec4(col, 1);
+    // Calculate relative luminance of the pixel
+    float luminance = dot(col, vec3(0.299, 0.587, 0.114));
+    // Make the dark background transparent while keeping bright lines visible
+    float alpha = smoothstep(0.15, 0.45, luminance) * 0.75;
+    fragColor = vec4(col, alpha);
   }
+
 `;
 
 let animationFrameId = null;
