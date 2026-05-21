@@ -3,7 +3,7 @@ name = "stand-reminder"
 version = "0.1.0"
 description = "A standing reminder application"
 authors = ["you"]
-license = ""
+license = "GPL-3.0-or-later"
 repository = ""
 edition = "2021"
 
