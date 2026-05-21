@@ -1,0 +1,149 @@
+/* ============================================
+   赛博霓虹主题 (Cyberpunk Grid Theme)
+   ============================================ */
+
+/* --- 主题覆盖 --- */
+body.theme-cyber .marquee-border {
+    background: rgba(10, 6, 18, 0.12);
+    background-image:
+        linear-gradient(rgba(6, 182, 212, 0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(6, 182, 212, 0.06) 1px, transparent 1px);
+    background-size: 30px 30px;
+    background-position: center;
+    box-shadow:
+        inset 0 0 120px rgba(236, 72, 153, 0.15),
+        inset 0 0 45px rgba(0, 0, 0, 0.5);
+    animation: cyber-grid-scroll 16s linear infinite;
+}
+
+body.theme-cyber .aura-glow-1 {
+    background: radial-gradient(circle, rgba(236, 72, 153, 0.55) 0%, rgba(236, 72, 153, 0) 70%);
+}
+
+body.theme-cyber .aura-glow-2 {
+    background: radial-gradient(circle, rgba(6, 182, 212, 0.5) 0%, rgba(6, 182, 212, 0) 70%);
+}
+
+body.theme-cyber .aura-glow-3 {
+    background: radial-gradient(circle, rgba(244, 63, 94, 0.4) 0%, rgba(244, 63, 94, 0) 70%);
+}
+
+body.theme-cyber .badge {
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.4), rgba(236, 72, 153, 0.4));
+    color: #ffffff;
+    border-color: rgba(6, 182, 212, 0.4);
+    box-shadow: 0 0 10px rgba(6, 182, 212, 0.25);
+    text-shadow: 0 0 4px #06B6D4;
+}
+
+body.theme-cyber .guide-subtitle {
+    color: #22d3ee;
+    text-shadow: 0 0 6px rgba(34, 211, 238, 0.4);
+}
+
+body.theme-cyber .glass-card {
+    border: 1px solid rgba(6, 182, 212, 0.25);
+    box-shadow:
+        0 30px 70px rgba(0, 0, 0, 0.65),
+        0 0 40px rgba(6, 182, 212, 0.2);
+}
+
+@keyframes cyber-grid-scroll {
+    0% { background-position: center 0px; }
+    100% { background-position: center 90px; }
+}
+
+/* --- 赛博方块粒子 --- */
+.particle-cube {
+    position: absolute;
+    border-radius: 2px;
+    box-shadow: 0 0 8px rgba(6, 182, 212, 0.5);
+    animation: cyber-up 6s linear infinite;
+}
+
+@keyframes cyber-up {
+    0% { transform: translateY(110vh) rotate(0deg) scale(0.8); opacity: 0; }
+    10% { opacity: 0.8; }
+    90% { opacity: 0.8; }
+    100% { transform: translateY(-10vh) rotate(360deg) scale(0.6); opacity: 0; }
+}
+
+/* --- 二进制粒子 --- */
+.particle-binary {
+    position: absolute;
+    font-family: monospace;
+    font-weight: bold;
+    user-select: none;
+    pointer-events: none;
+    animation: cyber-up 6s linear infinite;
+    opacity: 0;
+}
+
+/* --- 赛博小人动画 --- */
+.cyber-arms {
+    animation: cyber-arms-wave 3s ease-in-out infinite;
+    transform-origin: 50px 65px;
+}
+
+.cyber-head {
+    animation: cyber-head-bob 3s ease-in-out infinite;
+}
+
+.cyber-joint-l {
+    animation: cyber-joint-l-wave 3s ease-in-out infinite;
+    transform-origin: 50px 65px;
+}
+
+.cyber-joint-r {
+    animation: cyber-joint-r-wave 3s ease-in-out infinite;
+    transform-origin: 50px 65px;
+}
+
+@keyframes cyber-arms-wave {
+    0%, 100% { transform: scaleY(1); }
+    50% { transform: scaleY(1.18) translateY(-2px); }
+}
+
+@keyframes cyber-head-bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+}
+
+@keyframes cyber-joint-l-wave {
+    0%, 100% { transform: translateY(0) translateX(0); }
+    50% { transform: translateY(-8px) translateX(-3px); }
+}
+
+@keyframes cyber-joint-r-wave {
+    0%, 100% { transform: translateY(0) translateX(0); }
+    50% { transform: translateY(-8px) translateX(3px); }
+}
+
+/* --- 扫描线 --- */
+.cyber-scanline {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 6px;
+    background: linear-gradient(180deg, rgba(6, 182, 212, 0.25), rgba(6, 182, 212, 0));
+    box-shadow: 0 0 12px rgba(6, 182, 212, 0.4);
+    animation: scanline-sweep 6s linear infinite;
+    opacity: 0.7;
+    pointer-events: none;
+    z-index: 1;
+}
+
+@keyframes scanline-sweep {
+    0% { top: -10px; }
+    100% { top: 110vh; }
+}
+
+/* --- 关节闪烁 --- */
+.cyber-joint-l, .cyber-joint-r {
+    animation: cyber-joint-blink 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes cyber-joint-blink {
+    0% { fill: #06B6D4; filter: drop-shadow(0 0 1px #06B6D4); }
+    100% { fill: #EC4899; filter: drop-shadow(0 0 6px #EC4899); }
+}
