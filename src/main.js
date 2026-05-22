@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Load saved settings
     const savedInterval = localStorage.getItem('interval') || 45;
     const savedRunning = localStorage.getItem('isRunning');
-    const savedBgStyle = localStorage.getItem('bgStyle') || 'aura';
+    const savedBgStyle = localStorage.getItem('bgStyle') || 'zen';
     // First launch: savedRunning is null, default to false
     const isRunning = savedRunning === 'true';
     

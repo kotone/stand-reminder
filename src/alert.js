@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const tipsContainer = document.querySelector('.tips-container');
 
     // 1. 获取主题设置
-    const bgStyle = localStorage.getItem('bgStyle') || 'aura';
+    const bgStyle = localStorage.getItem('bgStyle') || 'zen';
     document.body.className = 'theme-' + bgStyle;
 
     // 2. 动态注入主题 CSS
