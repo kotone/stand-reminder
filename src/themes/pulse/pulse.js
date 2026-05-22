@@ -79,6 +79,9 @@ function initCanvas() {
     let waves = [];
     let maskRects = [];
     let frameCount = 0;
+    // gradient 缓存映射：key = 每个 shape 的唯一标识（由 color.stops 拼接）
+    // value = CanvasGradient 对象
+    const gradientCache = new Map();
 
     // Configurable animation variables
     const gap = 44;
@@ -135,12 +138,9 @@ function initCanvas() {
         }
     }
 
-    function resolveFill(ctx, colorDef, size) {
-        if (colorDef.type === 'solid') return colorDef.value;
-        const grad = ctx.createRadialGradient(0, -size * 0.3, 0, 0, size * 0.3, size * 1.5);
-        grad.addColorStop(0, colorDef.stops[0]);
-        grad.addColorStop(1, colorDef.stops[1]);
-        return grad;
+    function resolveFill(ctx, shape) {
+        // 直接读取每个 shape 预缓存的填充色，避免每帧重新创建 CanvasGradient 对象
+        return shape.cachedFill;
     }
 
     function randomStarProps() {
@@ -171,6 +171,7 @@ function initCanvas() {
                     size: gap * 0.38,
                     scale: restScale,
                     maxScale: rnd(minHoverScale, maxHoverScale),
+                    cachedFill: null,  // 将在 rebuildFillCache() 中填充
                 };
                 if (type === 'star') Object.assign(shape, randomStarProps());
                 shapes.push(shape);
@@ -178,6 +179,35 @@ function initCanvas() {
         }
 
         return { shapes, width: W, height: H };
+    }
+
+    // 重建 gradient 缓存：每次 resize 后调用一次，后续每帧直接读取 shape.cachedFill
+    function rebuildFillCache() {
+        if (!grid) return;
+        // 清除旧缓存，释放上一个尺寸的 gradient 对象
+        gradientCache.clear();
+
+        const shapes = grid.shapes;
+        for (let i = 0; i < shapes.length; i++) {
+            const shape = shapes[i];
+            const colorDef = shape.color;
+            if (colorDef.type === 'solid') {
+                shape.cachedFill = colorDef.value;
+            } else {
+                // gradient 缓存以 stops 作为 key，相同配色的形状共享同一对象
+                const key = colorDef.stops.join('|') + '|' + shape.size;
+                if (!gradientCache.has(key)) {
+                    // 以 shape.size 为半径基准创建一次，多个同配色共享它
+                    // 注意：CanvasGradient 坐标系是 shape 的本地坐标系（ctx.save/translate/scale 后）
+                    const size = shape.size;
+                    const grad = ctx.createRadialGradient(0, -size * 0.3, 0, 0, size * 0.3, size * 1.5);
+                    grad.addColorStop(0, colorDef.stops[0]);
+                    grad.addColorStop(1, colorDef.stops[1]);
+                    gradientCache.set(key, grad);
+                }
+                shape.cachedFill = gradientCache.get(key);
+            }
+        }
     }
 
     function init() {
@@ -193,6 +223,8 @@ function initCanvas() {
         ctx.scale(dpr, dpr);
 
         grid = buildGrid();
+        // resize 后重建 gradient 缓存（仅此一次创建，每帧不再重建）
+        rebuildFillCache();
     }
 
     resizeListener = init;
@@ -214,8 +246,12 @@ function initCanvas() {
     }, 3500);
 
     function tick() {
-        // Stop execution if theme is no longer active
-        if (!document.body.classList.contains('theme-pulse')) return;
+        // 停止执行：当前主题不再激活时，同时清理 interval，防止内存泄漏
+        if (!document.body.classList.contains('theme-pulse')) {
+            clearInterval(intervalId);
+            intervalId = null;
+            return;
+        }
 
         const shapes = grid.shapes;
         const width = grid.width;
@@ -277,7 +313,7 @@ function initCanvas() {
             ctx.translate(shape.x, shape.y);
             ctx.rotate(shape.angle);
             ctx.scale(shape.scale, shape.scale);
-            ctx.fillStyle = resolveFill(ctx, shape.color, shape.size);
+            ctx.fillStyle = resolveFill(ctx, shape);
             drawShape(ctx, shape);
             ctx.restore();
         }

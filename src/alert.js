@@ -72,8 +72,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // 先显示第一条
     showTip(currentTipIndex);
-    // 每 10 秒轮播
-    setInterval(rotateTip, 10000);
+    // 每 10 秒轮播，存储 ID 以便窗口关闭前清理，防止多次触发时叠加多个 interval
+    const tipIntervalId = setInterval(rotateTip, 10000);
+    window.addEventListener('beforeunload', () => clearInterval(tipIntervalId), { once: true });
 
     // 5. 显示已工作时长
     const savedInterval = localStorage.getItem('interval') || 45;

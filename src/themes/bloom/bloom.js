@@ -243,6 +243,10 @@ function initBloomShader() {
     gl.enableVertexAttribArray(positionLocation);
     gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
 
+    // 初始化时绑定一次，渲染循环中不再重复调用，避免每帧冗余的 GPU 状态切换
+    gl.useProgram(program);
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+
     function resize() {
         const W = window.innerWidth;
         const H = window.innerHeight;
@@ -273,8 +277,6 @@ function initBloomShader() {
         const delta = (performance.now() - startTime) / 1000;
         gl.clearColor(0, 0, 0, 0);
         gl.clear(gl.COLOR_BUFFER_BIT);
-        gl.useProgram(program);
-        gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
         gl.uniform1f(timeLocation, delta);
         gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
         gl.drawArrays(gl.TRIANGLES, 0, 6);

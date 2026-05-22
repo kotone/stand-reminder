@@ -226,6 +226,10 @@ function initWebGL() {
     gl.enableVertexAttribArray(position);
     gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
 
+    // 初始化时绑定一次，渲染循环中不再重复调用，避免每帧冗余的 GPU 状态切换
+    gl.useProgram(program);
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+
     const uResolution = gl.getUniformLocation(program, 'resolution');
     const uTime = gl.getUniformLocation(program, 'time');
     const uMove = gl.getUniformLocation(program, 'move');
@@ -258,9 +262,6 @@ function initWebGL() {
 
         gl.clearColor(0.0, 0.0, 0.0, 0.0);
         gl.clear(gl.COLOR_BUFFER_BIT);
-
-        gl.useProgram(program);
-        gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
 
         gl.uniform2f(uResolution, canvas.width, canvas.height);
         gl.uniform1f(uTime, (now - startTime) * 0.001);
