@@ -1,0 +1,127 @@
+/* ============================================
+   水晶幻境主题 (Crystal Kaleidoscope Theme)
+   ============================================ */
+
+/* --- 主题覆盖 --- */
+body.theme-crystal .marquee-border {
+    background: rgba(8, 4, 16, 0.16);
+    box-shadow:
+        inset 0 0 120px rgba(35, 10, 50, 0.38),
+        inset 0 0 45px rgba(0, 0, 0, 0.6);
+}
+
+body.theme-crystal .aura-glow-1 {
+    background: radial-gradient(circle, rgba(168, 85, 247, 0.28) 0%, rgba(168, 85, 247, 0) 70%);
+}
+
+body.theme-crystal .aura-glow-2 {
+    background: radial-gradient(circle, rgba(236, 72, 153, 0.24) 0%, rgba(236, 72, 153, 0) 70%);
+}
+
+body.theme-crystal .aura-glow-3 {
+    background: radial-gradient(circle, rgba(139, 92, 246, 0.2) 0%, rgba(139, 92, 246, 0) 70%);
+}
+
+body.theme-crystal .badge {
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.4), rgba(236, 72, 153, 0.4));
+    color: #f3e8ff;
+    border-color: rgba(168, 85, 247, 0.35);
+    box-shadow: 0 0 12px rgba(168, 85, 247, 0.25);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+body.theme-crystal .guide-subtitle {
+    color: #c084fc;
+    text-shadow: 0 0 8px rgba(192, 132, 252, 0.3);
+}
+
+body.theme-crystal .glass-card {
+    border: 1px solid rgba(168, 85, 247, 0.25);
+    box-shadow:
+        0 30px 70px rgba(0, 0, 0, 0.65),
+        0 0 35px rgba(168, 85, 247, 0.16);
+    animation: crystal-card-breathe 8s ease-in-out infinite;
+}
+
+/* --- WebGL 画布展现 --- */
+body.theme-crystal #glcanvas {
+    opacity: 1;
+}
+
+/* --- 卡片呼吸动效 --- */
+@keyframes crystal-card-breathe {
+    0%, 100% {
+        box-shadow: 0 30px 70px rgba(0, 0, 0, 0.65), 0 0 25px rgba(168, 85, 247, 0.12);
+        border-color: rgba(168, 85, 247, 0.18);
+    }
+    50% {
+        box-shadow: 0 35px 80px rgba(0, 0, 0, 0.7), 0 0 45px rgba(236, 72, 153, 0.25);
+        border-color: rgba(236, 72, 153, 0.3);
+    }
+}
+
+/* --- SVG 水晶折射与光圈动画 --- */
+.crystal-body-group {
+    transform-origin: 50px 50px;
+    animation: crystal-facet-rotate 18s linear infinite;
+}
+
+.crystal-inner-line {
+    transform-origin: 50px 50px;
+    animation: crystal-line-pulse 4s ease-in-out infinite alternate;
+}
+
+.crystal-center {
+    animation: crystal-core-glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes crystal-facet-rotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes crystal-line-pulse {
+    0% {
+        transform: scale(0.9);
+        opacity: 0.4;
+    }
+    100% {
+        transform: scale(1.1);
+        opacity: 0.95;
+        filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.8));
+    }
+}
+
+@keyframes crystal-core-glow {
+    0% { opacity: 0.6; filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.5)); }
+    100% { opacity: 1; filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.9)); }
+}
+
+/* --- 漂浮水晶菱形粒子 --- */
+.particle-diamond {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: linear-gradient(135deg, rgba(192, 132, 252, 0.75), rgba(236, 72, 153, 0.45));
+    transform-origin: center;
+    animation: diamond-float-wobble 7.5s ease-in-out infinite;
+    pointer-events: none;
+    opacity: 0;
+}
+
+@keyframes diamond-float-wobble {
+    0% {
+        transform: translateY(105vh) translateX(0) rotate(45deg) scale(0.65);
+        opacity: 0;
+    }
+    15% {
+        opacity: 0.6;
+    }
+    85% {
+        opacity: 0.6;
+    }
+    100% {
+        transform: translateY(-5vh) translateX(55px) rotate(405deg) scale(0.4);
+        opacity: 0;
+    }
+}
