@@ -21,6 +21,20 @@ document.addEventListener('DOMContentLoaded', () => {
         appWindow.startDragging();
     });
 
+    // 所有可用主题列表（与 alert.js 保持同步）
+    const ALL_THEMES = ['zen', 'cyber', 'night', 'pulse', 'bloom', 'warp', 'crystal', 'swirl'];
+
+    // 将随机主题解析权集中在此单一窗口：每次提醒启动或主题变更时
+    // 重新决定本轮要展示的具体主题，写入 resolvedBgStyle 供 alert.js 只读。
+    // 这样多个 alert 窗口永远读到同一个值，不存在竞态。
+    function refreshResolvedTheme() {
+        const style = localStorage.getItem('bgStyle') || 'zen';
+        const resolved = style === 'random'
+            ? ALL_THEMES[Math.floor(Math.random() * ALL_THEMES.length)]
+            : style;
+        localStorage.setItem('resolvedBgStyle', resolved);
+    }
+
     // Load saved settings
     const savedInterval = localStorage.getItem('interval') || 45;
     const savedRunning = localStorage.getItem('isRunning');
@@ -34,8 +48,12 @@ document.addEventListener('DOMContentLoaded', () => {
         bgStyleSelect.value = savedBgStyle;
         bgStyleSelect.addEventListener('change', (e) => {
             localStorage.setItem('bgStyle', e.target.value);
+            refreshResolvedTheme();
         });
     }
+
+    // 初始化时解析一次（处理应用启动时 isRunning=true 的场景）
+    refreshResolvedTheme();
     
     updateStatusText();
 
@@ -57,6 +75,8 @@ document.addEventListener('DOMContentLoaded', () => {
             intervalInput.value = event.payload.minutes;
             localStorage.setItem('interval', event.payload.minutes);
         }
+        // 每次提醒（重新）启动时刷新随机主题，确保下轮弹窗使用新的随机结果
+        refreshResolvedTheme();
         updateStatusText();
     });
 

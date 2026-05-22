@@ -27,12 +27,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     const guideText = document.getElementById('guideText');
     const tipsContainer = document.querySelector('.tips-container');
 
-    // 1. 获取主题设置（若为随机则从所有主题中随机挑选一个）
-    const ALL_THEMES = ['zen', 'cyber', 'night', 'pulse', 'bloom', 'warp', 'crystal', 'swirl'];
-    const savedBgStyle = localStorage.getItem('bgStyle') || 'zen';
-    const bgStyle = savedBgStyle === 'random'
-        ? ALL_THEMES[Math.floor(Math.random() * ALL_THEMES.length)]
-        : savedBgStyle;
+    // 1. 获取主题设置
+    //    随机主题由 main.js（设置窗口）在每次提醒启动时预先解析并写入 resolvedBgStyle，
+    //    此处只读，保证多屏场景下所有 alert 窗口始终使用同一主题，不存在竞态。
+    const bgStyle = localStorage.getItem('resolvedBgStyle') || localStorage.getItem('bgStyle') || 'zen';
     document.body.className = 'theme-' + bgStyle;
 
     // 2. 动态注入主题 CSS
