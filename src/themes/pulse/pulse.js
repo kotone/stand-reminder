@@ -246,10 +246,14 @@ function initCanvas() {
     }, 3500);
 
     function tick() {
-        // 停止执行：当前主题不再激活时，同时清理 interval，防止内存泄漏
+        // 停止执行：当前主题不再激活时，清理 interval 和 resize 监听器，防止内存泄漏
         if (!document.body.classList.contains('theme-pulse')) {
             clearInterval(intervalId);
             intervalId = null;
+            if (resizeListener) {
+                window.removeEventListener('resize', resizeListener);
+                resizeListener = null;
+            }
             return;
         }
 
