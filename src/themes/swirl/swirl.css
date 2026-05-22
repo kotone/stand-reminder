@@ -1,0 +1,96 @@
+/* ============================================
+   时空漩涡主题 (Swirl Cosmic Theme)
+   ============================================ */
+
+/* --- 主题背景与边缘 --- */
+body.theme-swirl .marquee-border {
+    background: rgba(4, 4, 12, 0.2);
+    box-shadow:
+        inset 0 0 120px rgba(139, 92, 246, 0.2),
+        inset 0 0 45px rgba(0, 0, 0, 0.8);
+}
+
+body.theme-swirl .aura-glow-1 {
+    background: radial-gradient(circle, rgba(139, 92, 246, 0.3) 0%, rgba(139, 92, 246, 0) 70%);
+}
+
+body.theme-swirl .aura-glow-2 {
+    background: radial-gradient(circle, rgba(6, 182, 212, 0.25) 0%, rgba(6, 182, 212, 0) 70%);
+}
+
+body.theme-swirl .aura-glow-3 {
+    background: radial-gradient(circle, rgba(236, 72, 153, 0.15) 0%, rgba(236, 72, 153, 0) 70%);
+}
+
+/* --- 卡片与文本样式 --- */
+body.theme-swirl .badge {
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.35), rgba(139, 92, 246, 0.35));
+    color: #f5f3ff;
+    border-color: rgba(6, 182, 212, 0.3);
+}
+
+body.theme-swirl .guide-subtitle {
+    color: #a5f3fc;
+}
+
+body.theme-swirl .glass-card {
+    border: 1px solid rgba(6, 182, 212, 0.25);
+    box-shadow:
+        0 30px 70px rgba(0, 0, 0, 0.75),
+        0 0 35px rgba(6, 182, 212, 0.15);
+    animation: swirl-card-breathe 8s ease-in-out infinite;
+}
+
+/* --- WebGL Canvas 激活 --- */
+body.theme-swirl #glcanvas {
+    opacity: 1;
+}
+
+/* --- 卡片呼吸动画 --- */
+@keyframes swirl-card-breathe {
+    0%, 100% {
+        box-shadow: 0 30px 70px rgba(0, 0, 0, 0.75), 0 0 25px rgba(6, 182, 212, 0.1);
+        border-color: rgba(6, 182, 212, 0.25);
+        transform: translateY(0);
+    }
+    50% {
+        box-shadow: 0 35px 80px rgba(0, 0, 0, 0.8), 0 0 45px rgba(139, 92, 246, 0.25);
+        border-color: rgba(139, 92, 246, 0.3);
+        transform: translateY(-5px);
+    }
+}
+
+/* --- 图标 SVG 动画 --- */
+.swirl-icon {
+    animation: swirl-galaxy-rotate 12s linear infinite;
+    transform-origin: 50px 50px;
+}
+
+.swirl-icon .swirl-arm-1 {
+    animation: swirl-arm-pulse 4s ease-in-out infinite alternate;
+}
+
+.swirl-icon .swirl-arm-2 {
+    animation: swirl-arm-pulse 4s ease-in-out infinite alternate;
+    animation-delay: 2s;
+}
+
+.swirl-icon .swirl-core {
+    animation: swirl-core-breathe 2s ease-in-out infinite alternate;
+    transform-origin: 50px 50px;
+}
+
+@keyframes swirl-galaxy-rotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes swirl-arm-pulse {
+    0% { stroke-width: 2px; opacity: 0.7; }
+    100% { stroke-width: 3.5px; opacity: 1; }
+}
+
+@keyframes swirl-core-breathe {
+    0% { transform: scale(0.9); }
+    100% { transform: scale(1.2); }
+}
