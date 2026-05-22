@@ -61,49 +61,49 @@ body.theme-pulse #glcanvas {
 }
 
 /* --- 图标 SVG 动画 --- */
-.pulse-icon .pulse-ring-outer {
-    animation: pulse-ring-scale 4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+.pulse-icon .pulse-outer-frame {
+    animation: pulse-frame-rotate 8s linear infinite;
     transform-origin: 50px 50px;
 }
 
-.pulse-icon .pulse-ring-mid {
-    animation: pulse-ring-scale 4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-    animation-delay: 1.3s;
+.pulse-icon .pulse-wave-line {
+    stroke-dasharray: 180;
+    stroke-dashoffset: 180;
+    animation: pulse-line-flow 4s ease-in-out infinite;
+}
+
+.pulse-icon .pulse-center-diamond {
+    animation: pulse-diamond-breathe 2s ease-in-out infinite alternate;
     transform-origin: 50px 50px;
 }
 
-.pulse-icon .pulse-ring-inner {
-    animation: pulse-ring-scale 4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-    animation-delay: 2.6s;
-    transform-origin: 50px 50px;
+.pulse-icon .pulse-node {
+    animation: pulse-node-glow 2s ease-in-out infinite alternate;
 }
 
-.pulse-icon .pulse-center-dot {
-    animation: pulse-dot-breathe 2s ease-in-out infinite alternate;
-    transform-origin: 50px 50px;
+.pulse-icon .pulse-node:nth-child(2) {
+    animation-delay: 1s;
 }
 
-@keyframes pulse-ring-scale {
-    0% {
-        transform: scale(0.6);
-        opacity: 0.1;
-    }
-    50% {
-        opacity: 0.8;
-    }
-    100% {
-        transform: scale(1.15);
-        opacity: 0;
-    }
+@keyframes pulse-frame-rotate {
+    0% { transform: rotate(0deg) scale(0.95); }
+    50% { transform: rotate(180deg) scale(1.05); }
+    100% { transform: rotate(360deg) scale(0.95); }
 }
 
-@keyframes pulse-dot-breathe {
-    0% {
-        transform: scale(0.85);
-        filter: drop-shadow(0 0 2px rgba(168, 85, 247, 0.5));
-    }
-    100% {
-        transform: scale(1.15);
-        filter: drop-shadow(0 0 8px rgba(236, 72, 153, 0.8));
-    }
+@keyframes pulse-line-flow {
+    0% { stroke-dashoffset: 180; }
+    50% { stroke-dashoffset: 0; }
+    100% { stroke-dashoffset: -180; }
 }
+
+@keyframes pulse-diamond-breathe {
+    0% { transform: scale(0.85); filter: drop-shadow(0 0 2px rgba(6, 182, 212, 0.5)); }
+    100% { transform: scale(1.25); filter: drop-shadow(0 0 10px rgba(236, 72, 153, 0.8)); }
+}
+
+@keyframes pulse-node-glow {
+    0% { opacity: 0.3; transform: scale(0.7); }
+    100% { opacity: 1; transform: scale(1.3); }
+}
+

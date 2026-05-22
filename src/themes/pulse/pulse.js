@@ -4,16 +4,26 @@
 
 const ICON_PULSE = `
     <svg id="icon-pulse-geom" class="stretch-icon pulse-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <!-- Concentric pulsating rings -->
-        <circle cx="50" cy="50" r="42" stroke="rgba(168, 85, 247, 0.2)" stroke-width="2" class="pulse-ring-outer" />
-        <circle cx="50" cy="50" r="30" stroke="rgba(236, 72, 153, 0.4)" stroke-width="2" class="pulse-ring-mid" />
-        <circle cx="50" cy="50" r="18" stroke="rgba(99, 102, 241, 0.6)" stroke-width="2" class="pulse-ring-inner" />
-        <!-- Pulsing center dot -->
-        <circle cx="50" cy="50" r="8" fill="url(#pulse-core-grad)" class="pulse-center-dot" />
+        <!-- Rotating outer diamond frame -->
+        <rect x="25" y="25" width="50" height="50" rx="8" stroke="rgba(168, 85, 247, 0.3)" stroke-width="2" class="pulse-outer-frame" />
+        
+        <!-- Flowing pulse line (ECG/wave) -->
+        <path d="M 15 50 H 32 L 40 25 L 48 75 L 56 35 L 62 55 L 68 50 H 85" stroke="url(#pulse-line-grad)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="pulse-wave-line" />
+        
+        <!-- Pulsing nodes on the wave peak & center -->
+        <circle cx="40" cy="25" r="3" fill="#ec4899" class="pulse-node" />
+        <circle cx="48" cy="75" r="3" fill="#8b5cf6" class="pulse-node" />
+        <polygon points="50,45 55,50 50,55 45,50" fill="url(#pulse-core-grad)" class="pulse-center-diamond" />
+        
         <defs>
+            <linearGradient id="pulse-line-grad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#8b5cf6" />
+                <stop offset="50%" stop-color="#ec4899" />
+                <stop offset="100%" stop-color="#06b6d4" />
+            </linearGradient>
             <radialGradient id="pulse-core-grad" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stop-color="#ec4899" />
-                <stop offset="100%" stop-color="#8b5cf6" />
+                <stop offset="0%" stop-color="#06b6d4" />
+                <stop offset="100%" stop-color="#ec4899" />
             </radialGradient>
         </defs>
     </svg>`;
@@ -120,8 +130,8 @@ function initCanvas() {
     function drawShape(ctx, shape) {
         switch (shape.type) {
             case 'circle': return drawCircle(ctx, shape.size / 1.5);
-            case 'pill':   return drawPill(ctx, shape.size / 1.4);
-            case 'star':   return drawStar(ctx, shape.size, shape.points, shape.innerRatio);
+            case 'pill': return drawPill(ctx, shape.size / 1.4);
+            case 'star': return drawStar(ctx, shape.size, shape.points, shape.innerRatio);
         }
     }
 
@@ -214,10 +224,6 @@ function initCanvas() {
 
         ctx.clearRect(0, 0, width, height);
 
-        // Fill background
-        ctx.fillStyle = '#08080c';
-        ctx.fillRect(0, 0, width, height);
-
         frameCount++;
         // Query card rect every 10 frames to avoid high layout thrashing
         if (frameCount % 10 === 0 || maskRects.length === 0) {
@@ -237,11 +243,11 @@ function initCanvas() {
         for (let i = 0; i < shapes.length; i++) {
             const shape = shapes[i];
             const pad = gap / 2;
-            
+
             // Mask shapes inside the glass card to make sure they do not overlap
             const masked = maskRects.some(r => {
-                return shape.x >= r.left - pad && shape.x <= r.right  + pad &&
-                       shape.y >= r.top  - pad && shape.y <= r.bottom + pad;
+                return shape.x >= r.left - pad && shape.x <= r.right + pad &&
+                    shape.y >= r.top - pad && shape.y <= r.bottom + pad;
             });
 
             if (masked) {
@@ -265,7 +271,7 @@ function initCanvas() {
             const factor = target > shape.scale ? durationToFactor(speedIn) : durationToFactor(speedOut);
             shape.scale += (target - shape.scale) * factor;
 
-            if (shape.scale < restScale * 0.15) continue;
+            if (shape.scale < 0.01) continue;
 
             ctx.save();
             ctx.translate(shape.x, shape.y);
