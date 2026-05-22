@@ -27,8 +27,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     const guideText = document.getElementById('guideText');
     const tipsContainer = document.querySelector('.tips-container');
 
-    // 1. 获取主题设置
-    const bgStyle = localStorage.getItem('bgStyle') || 'zen';
+    // 1. 获取主题设置（若为随机则从所有主题中随机挑选一个）
+    const ALL_THEMES = ['zen', 'cyber', 'night', 'pulse', 'bloom', 'warp', 'crystal', 'swirl'];
+    const savedBgStyle = localStorage.getItem('bgStyle') || 'zen';
+    const bgStyle = savedBgStyle === 'random'
+        ? ALL_THEMES[Math.floor(Math.random() * ALL_THEMES.length)]
+        : savedBgStyle;
     document.body.className = 'theme-' + bgStyle;
 
     // 2. 动态注入主题 CSS
