@@ -93,10 +93,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         centerElem.classList.add('show');
     }, 1000);
 
-    // 7. 当样式加载完成后显示窗口，避免闪烁
+    // 7. 由后端确认本轮提醒仍然有效，再显示窗口
     setTimeout(() => {
         if (window.__TAURI__) {
-            window.__TAURI__.window.appWindow.show();
+            window.__TAURI__.tauri.invoke('alert_ready').catch(console.error);
         }
     }, 150);
 });

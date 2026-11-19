@@ -2,13 +2,14 @@ const { invoke } = window.__TAURI__.tauri;
 const { appWindow } = window.__TAURI__.window;
 const { listen } = window.__TAURI__.event;
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     const toggleSwitch = document.getElementById('toggle-switch');
     const intervalInput = document.getElementById('interval');
     const statusText = document.getElementById('status-text');
     const closeBtn = document.getElementById('close-btn');
     const bgStyleSelect = document.getElementById('bg-style');
     const nextReminderEl = document.getElementById('next-reminder');
+    let statusRequest = 0;
 
     // --- Window drag support ---
     // CSS `-webkit-app-region: drag` is unreliable on Windows with transparent Tauri windows.
@@ -57,43 +58,37 @@ document.addEventListener('DOMContentLoaded', () => {
     
     updateStatusText();
 
-    if (isRunning) {
-        startReminder();
-    }
-
-    // Listen for backend events (e.g. tray stop/start)
-    listen('reminder-stopped', () => {
+    // Apply start and stop in the order the backend processed them.
+    const stoppedListener = listen('reminder-stopped', () => {
         toggleSwitch.checked = false;
         localStorage.setItem('isRunning', false);
         updateStatusText();
     });
 
-    listen('reminder-started', (event) => {
+    const startedListener = listen('reminder-started', (event) => {
+        const { minutes, fromTray } = event.payload;
         toggleSwitch.checked = true;
         localStorage.setItem('isRunning', true);
-        if (event.payload && event.payload.minutes) {
-            intervalInput.value = event.payload.minutes;
-            localStorage.setItem('interval', event.payload.minutes);
+        intervalInput.value = minutes;
+        localStorage.setItem('interval', minutes);
+        if (fromTray) {
+            refreshResolvedTheme();
         }
-        // 每次提醒（重新）启动时刷新随机主题，确保下轮弹窗使用新的随机结果
-        refreshResolvedTheme();
         updateStatusText();
     });
+
+    await Promise.all([stoppedListener, startedListener]);
 
     closeBtn.addEventListener('click', async () => {
         await appWindow.hide(); // Hide to tray
     });
 
     toggleSwitch.addEventListener('change', async (e) => {
-        const checked = e.target.checked;
-        localStorage.setItem('isRunning', checked);
-        
-        if (checked) {
+        if (e.target.checked) {
             await startReminder();
         } else {
-            await stopReminder();
+            await invoke('stop_reminder');
         }
-        updateStatusText();
     });
 
     intervalInput.addEventListener('change', (e) => {
@@ -105,11 +100,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (toggleSwitch.checked) {
             // Restart with new interval
             startReminder();
+        } else {
+            updateStatusText();
         }
-        updateStatusText();
     });
 
     async function updateStatusText() {
+        const request = ++statusRequest;
         const container = document.querySelector('.status-container');
         if (toggleSwitch.checked) {
             statusText.textContent = `每 ${intervalInput.value} 分钟提醒一次`;
@@ -118,6 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             try {
                 const nextTimestamp = await invoke('get_next_reminder_time');
+                if (request !== statusRequest) return;
                 if (nextTimestamp && nextReminderEl) {
                     const nextTime = new Date(nextTimestamp * 1000);
                     const hours = String(nextTime.getHours()).padStart(2, '0');
@@ -138,15 +136,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    async function startReminder() {
+    function startReminder() {
         const minutes = parseInt(intervalInput.value) || 45;
-        await invoke('start_reminder', { minutes });
-        updateStatusText();
-    }
-
-    async function stopReminder() {
-        await invoke('stop_reminder');
-        updateStatusText();
+        return invoke('start_reminder', { minutes });
     }
 
     // Refresh next reminder time when window gets focus (e.g. after unlock)
@@ -155,4 +147,8 @@ document.addEventListener('DOMContentLoaded', () => {
             updateStatusText();
         }
     });
+
+    if (isRunning && toggleSwitch.checked) {
+        await startReminder();
+    }
 });
